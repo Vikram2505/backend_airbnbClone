@@ -81,6 +81,10 @@ export const Get_All_Homes = async (req, res) => {
         $or: [
           { total_bedroom: { $in: bedrooms } },
           { total_beds: { $in: beds } },
+          { total_bathroom: { $in: bathroom } },
+          { total_beds: { $in: beds } },
+          { total_beds: { $in: beds } },
+
         ],
       })
         .limit(limit)
