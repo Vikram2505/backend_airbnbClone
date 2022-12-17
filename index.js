@@ -5,7 +5,9 @@ import connectDB from "./config/db.js";
 import morgan from "morgan";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
+import fs from "fs";
 const app = express();
+const customCss = fs.readFileSync((process.cwd()+"/swagger.css"), 'utf8');
 
 // NODE.JS application PORT
 const PORT = 3000;
@@ -38,7 +40,7 @@ const options = {
     },
     servers: [
       {
-        url: "https://backend-airbnb-clone.vercel.app",
+        url: "http://localhost:3000",
       },
     ],
   },
@@ -49,6 +51,6 @@ const specs = swaggerJSDoc(options);
 // Routes for API
 app.use("/user", userRouter);
 app.use("/home", homesRouter);
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs, {customCss}));
 
 app.listen(PORT, console.log(`Server is running on port ${PORT} ✅✅✅`));

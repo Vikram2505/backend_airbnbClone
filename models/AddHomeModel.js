@@ -45,4 +45,4 @@ const AddHomeSchema = mongoose.Schema({
 
 })
 
-export default mongoose.model("Homes", AddHomeSchema);
+export default mongoose.model("Airbnb_Homes", AddHomeSchema);
