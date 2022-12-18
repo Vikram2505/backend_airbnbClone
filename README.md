@@ -7,11 +7,11 @@
     <li>CRUD</li>
     <li>JWT</li>
 </ul>
-  <hr/>
-  <h4>Technologies</h4>
-  <ul>
+<hr/>
+<h4>Technologies</h4>
+<ul>
     <li>Node.js</li>
     <li>Mongodb with Mongoose</li>
     <li>Express.js with Auth</li>
     
-  </ul>
+</ul>
