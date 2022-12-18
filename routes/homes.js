@@ -31,14 +31,19 @@ const router = express.Router();
  *          - home_desc,
  *          - home_image
  *          - thumbnail_image
+ *          - owner_image
  *          - price
  *          - location
- *          - total_guest,
+ *          - latitude
+ *          - longitude
+ *          - total_guests,
  *          - total_beds,
  *          - total_bedroom,
  *          - total_bathroom,
  *          - rating,
  *          - this_place_offers,
+ *          - property_type,
+ *          - type_of_place,
  *      properties:
  *          home_name:
  *              type: string
@@ -48,34 +53,50 @@ const router = express.Router();
  *              type: aray
  *          thumbnail_image: 
  *              type: string
+ *          owner_image:
+ *              type: string
  *          price: 
  *              type: number
  *          location: 
  *              type: string
- *          total_guest: 
+ *          latitude:
+ *              type: number
+ *          longitude:
+ *              type: number
+ *          total_guests: 
  *              type: number
  *          total_beds: 
  *              type: number
  *          total_bedroom: 
  *              type: number
+ *          total_bathroom:
+ *              type: number
  *          rating: 
  *              type: number
  *          this_place_offers: 
  *                  type: aray
- *          favourite: 
- *              type: aray
+ *          property_type: 
+ *              type: string
+ *          type_of_place:
+ *              type: string
  *      example:
  *             home_name: House of Albetroz
  *             home_desc: description of your house
  *             home_image: [upload home image]
  *             thumbnail_image: upload thumbnail image
+ *             owner_image: upload owner image
  *             price: price of the house
  *             location: location of the house
- *             total_guest: total number of guests
+ *             latitude: latitude of location
+ *             longitude: longitude value
+ *             total_guests: total number of guests
  *             total_beds: total number of beds
  *             total_bedroom: total number of bedroom
+ *             total_bathroom: totla number of bathroom
  *             rating: rating for house in number
  *             this_place_offers: [service offers by this house in array]
+ *             property_type: property type i.e entire place, private room, shared room
+ *             type_of_place: type of place i.e house, flat, hotel, guest house
  *             
  */
 

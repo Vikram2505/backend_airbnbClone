@@ -21,6 +21,7 @@ const AddHomeSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    owner_image: String,
     price: {
         type: Number,
         required: true,
@@ -29,19 +30,26 @@ const AddHomeSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    total_guest: Number,
+    latitude: Number,
+    longitude: Number,
+    total_guests: Number,
     total_beds: Number,
     total_bedroom: Number,
     total_bathroom: Number,
     rating: Number,
-    // type_of_place: String,
-    // property_type: String,
     this_place_offers: [String],
     deleted: false,
     favourite: {
         type: [String],
         default: []
     },
+    property_type: {
+        type: [String],
+        default: []
+    },
+    type_of_place: {
+        type: String,
+    }
 
 })
 
