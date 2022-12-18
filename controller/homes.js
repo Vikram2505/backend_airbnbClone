@@ -31,34 +31,34 @@ export const Get_All_Homes = async (req, res) => {
   const {
     dataLimit,
     pageNo,
-    minPrice,
-    maxPrice,
-    typeOfPlace,
-    bedrooms,
-    beds,
-    bathroom,
-    guests,
-    propertyType,
-    amenities,
+    // minPrice,
+    // maxPrice,
+    // typeOfPlace,
+    // bedrooms,
+    // beds,
+    // bathroom,
+    // guests,
+    // propertyType,
+    // amenities,
   } = req.body;
   try {
     const limit = dataLimit;
     const startIndex = (Number(pageNo) - 1) * limit;
     const total = await HomeSchema.countDocuments({});
-    if (
-      dataLimit !== "" &&
-      pageNo !== "" &&
-      minPrice === "" &&
-      maxPrice === "" &&
-      typeOfPlace === "" &&
-      bedrooms === "" &&
-      beds === "" &&
-      bathroom == "" &&
-      propertyType === [] &&
-      amenities === "" &&
-      guests === ""
-    ) {
-      console.log("first condition");
+    // if (
+    //   dataLimit !== "" &&
+    //   pageNo !== "" &&
+    //   minPrice === "" &&
+    //   maxPrice === "" &&
+    //   typeOfPlace === "" &&
+    //   bedrooms === "" &&
+    //   beds === "" &&
+    //   bathroom == "" &&
+    //   propertyType === [] &&
+    //   amenities === "" &&
+    //   guests === ""
+    // ) {
+    //   console.log("first condition");
       const AllHomes = await HomeSchema.find({ deleted: false })
         .limit(limit)
         .skip(startIndex)
@@ -75,44 +75,44 @@ export const Get_All_Homes = async (req, res) => {
         AllHomes,
         status: "success",
       });
-    } else if (
-      minPrice !== "" ||
-      maxPrice !== "" ||
-      typeOfPlace !== "" ||
-      bedrooms !== "" ||
-      beds !== "" ||
-      bathroom !== "" ||
-      propertyType !== "" ||
-      amenities !== "" || guests !== ""
-    ) {
-      console.log(bedrooms,beds,bathroom,guests,propertyType,"second condition");
-      let AllHomes = await HomeSchema.find({
-        $or: [
-          { total_bedroom: { $in: bedrooms } },
-          { total_beds: { $in: beds } },
-          { total_bathroom: { $in: bathroom } },
-          { total_guests: { $in: guests } },
-          { property_type: { $in: propertyType} },
-        ],
-      })
-        .limit(limit)
-        .skip(startIndex)
-        .sort({ _id: -1 });
-      if (AllHomes.length > 0) {
-        res.status(200).json({
-          currentPage: Number(pageNo),
-          numberOfPages: Math.ceil(total / limit),
-          count: AllHomes.length,
-          AllHomes,
-          status: "success",
-        });
-      } else {
-        res.status(404).json({
-          status: "failed",
-          message: "Data not found, try to modify query to get results",
-        });
-      }
-    }
+    // } else if (
+    //   minPrice !== "" ||
+    //   maxPrice !== "" ||
+    //   typeOfPlace !== "" ||
+    //   bedrooms !== "" ||
+    //   beds !== "" ||
+    //   bathroom !== "" ||
+    //   propertyType !== "" ||
+    //   amenities !== "" || guests !== ""
+    // ) {
+    //   console.log(bedrooms,beds,bathroom,guests,propertyType,"second condition");
+    //   let AllHomes = await HomeSchema.find({
+    //     $or: [
+    //       { total_bedroom: { $in: bedrooms } },
+    //       { total_beds: { $in: beds } },
+    //       { total_bathroom: { $in: bathroom } },
+    //       { total_guests: { $in: guests } },
+    //       { property_type: { $in: propertyType} },
+    //     ],
+    //   })
+    //     .limit(limit)
+    //     .skip(startIndex)
+    //     .sort({ _id: -1 });
+    //   if (AllHomes.length > 0) {
+    //     res.status(200).json({
+    //       currentPage: Number(pageNo),
+    //       numberOfPages: Math.ceil(total / limit),
+    //       count: AllHomes.length,
+    //       AllHomes,
+    //       status: "success",
+    //     });
+    //   } else {
+    //     res.status(404).json({
+    //       status: "failed",
+    //       message: "Data not found, try to modify query to get results",
+    //     });
+    //   }
+    // }
   } catch (err) {
     res.status(500).json({
       status: "error",
