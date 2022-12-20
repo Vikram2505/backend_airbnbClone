@@ -1,20 +1,79 @@
 import mongoose from "mongoose";
 import HomeSchema from "../models/AddHomeModel.js";
+// import uploads from "../config/cloudinary.js"
+import fs from "fs";
+// define require
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  secure: true,
+  cloud_name: "dhqhupgw2",
+  api_key: "872844264563622",
+  api_secret: "wah5x4YBIB8JhJCQE63gShhAv5k",
+});
 
 // @desc        Create new home
 // @route       POST /home/create-home
 export const Create_Home = async (req, res) => {
   const HomeData = req.body;
-  const NewHome = new HomeSchema({
-    ...HomeData,
-    creator: req.userId,
-    deleted: false,
-    created_at: new Date().toISOString(),
-  });
+  let homeImage = [];
+  //receive uploaded home images
+  const homeImages = req?.files?.home_image;
+  const thumbnail = req?.files?.thumbnail_image;
+  const ownerImage = req?.files?.owner_image;
+
+  console.log(thumbnail.size);
+  if (homeImages.size < 1000000 || thumbnail.size < 1000000 || ownerImage.size < 1000000) {
+    res.status(400).json({
+      status: "failed",
+      message: "Image size must less than 1Mb",
+    });
+  } else {
+    // let multipleHomeImages = homeImages.map((image) =>
+    //   cloudinary.uploader.upload(image.tempFilePath)
+    // );
+    // let imageResponses = await Promise.all(multipleHomeImages);
+    // imageResponses.map((url) => homeImage.push(url.secure_url));
+
+    // fs.rm("tmp", { recursive: true, force: true }, (err) => {
+    //   if (err) {
+    //     console.log(err);
+    //   }
+    //   console.log(`tmp folder is deleted!`);
+    // });
+
+    //   let thumbnailImage =
+    //     thumbnail === undefined
+    //       ? res.status(400).json({
+    //         status: "failed",
+    //         message: "Thumbnail image is required"
+    //       })
+    //       : await cloudinary.uploader.upload(thumbnail.tempFilePath);
+
+    //   let ownerImageUpload =
+    //     ownerImage === undefined
+    //       ? ""
+    //       : await cloudinary.uploader.upload(ownerImage.tempFilePath);
+
+    //   const NewHome = new HomeSchema({
+    //     ...HomeData,
+    //     creator: req.userId,
+    //     home_image: homeImage,
+    //     deleted: false,
+    //     created_at: new Date().toISOString(),
+    //   });
+  }
   try {
-    await NewHome.save();
+    // await NewHome.save();
     res.status(201).json({
       status: "success",
+      //   NewHome,
+      //   homeImage: homeImage,
+      //   ownerImage: ownerImageUpload,
+      //   thumbnailImage: thumbnailImage.secure_url,
       message: "New home is created successfully",
     });
   } catch (err) {
@@ -59,22 +118,22 @@ export const Get_All_Homes = async (req, res) => {
     //   guests === ""
     // ) {
     //   console.log("first condition");
-      const AllHomes = await HomeSchema.find({ deleted: false })
-        .limit(limit)
-        .skip(startIndex)
-        .sort({ _id: -1 })
-        .select(
-          "home_name location total_guest total_beds total_bedroom total_bathroom price thumbnail_image rating this_place_offers"
-        )
-        .exec();
-      res.status(200).json({
-        currentPage: Number(pageNo),
-        count: total,
-        numberOfPages: Math.ceil(total / limit),
-        count: AllHomes.length,
-        AllHomes,
-        status: "success",
-      });
+    const AllHomes = await HomeSchema.find({ deleted: false })
+      .limit(limit)
+      .skip(startIndex)
+      .sort({ _id: -1 })
+      .select(
+        "home_name location total_guest total_beds total_bedroom total_bathroom price thumbnail_image rating this_place_offers"
+      )
+      .exec();
+    res.status(200).json({
+      currentPage: Number(pageNo),
+      count: total,
+      numberOfPages: Math.ceil(total / limit),
+      count: AllHomes.length,
+      AllHomes,
+      status: "success",
+    });
     // } else if (
     //   minPrice !== "" ||
     //   maxPrice !== "" ||

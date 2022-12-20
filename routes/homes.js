@@ -1,4 +1,6 @@
 import express from "express";
+
+// import upload from "../config/multer.js";
 import {
   Add_to_Favourite,
   Create_Home,
@@ -11,6 +13,7 @@ import {
 import auth from "../middleware/auth.js";
 
 const router = express.Router();
+
 // Swagger group name
 /**
  * @swagger
@@ -131,7 +134,7 @@ const router = express.Router();
 
 // @desc        Create new home
 // @route       POST /home/create-home
-router.post("/create-home", auth, Create_Home);
+router.post("/create-home",Create_Home);
 
 // swagger schema get all homes
 /**
