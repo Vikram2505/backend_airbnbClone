@@ -25,13 +25,18 @@ export const Create_Home = async (req, res) => {
   const thumbnail = req?.files?.thumbnail_image;
   const ownerImage = req?.files?.owner_image;
 
-  console.log(thumbnail.size);
-  if (homeImages.size < 1000000 || thumbnail.size < 1000000 || ownerImage.size < 1000000) {
+  if (homeImages?.size > 1000000 || thumbnail?.size > 1000000 || ownerImage?.size > 1000000) {
     res.status(400).json({
       status: "failed",
       message: "Image size must less than 1Mb",
     });
   } else {
+    if(homeImages.length === undefined){
+        return res.status(400).json({
+            status: "error",
+            message: "Atleast 2 images need to upload"
+        })
+    }
     // let multipleHomeImages = homeImages.map((image) =>
     //   cloudinary.uploader.upload(image.tempFilePath)
     // );
