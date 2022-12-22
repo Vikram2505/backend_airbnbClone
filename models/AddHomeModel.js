@@ -17,10 +17,6 @@ const AddHomeSchema = mongoose.Schema({
         type: [String],
         required: true,
     },
-    thumbnail_image: {
-        type: String,
-        required: true
-    },
     owner_image: String,
     price: {
         type: Number,
