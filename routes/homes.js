@@ -7,7 +7,6 @@ import {
   Delete_Single_Home,
   Get_All_Homes,
   Get_Single_Home,
-  Search_Homes,
   Update_Single_Home,
 } from "../controller/homes.js";
 import auth from "../middleware/auth.js";
@@ -26,7 +25,7 @@ const router = express.Router();
 /**
  * @swagger
  * components:
- *  schemas:    
+ *  schemas:
  *    Create_homes:
  *      type: object
  *      required:
@@ -54,31 +53,31 @@ const router = express.Router();
  *              type: string
  *          home_image:
  *              type: aray
- *          thumbnail_image: 
+ *          thumbnail_image:
  *              type: string
  *          owner_image:
  *              type: string
- *          price: 
+ *          price:
  *              type: number
- *          location: 
+ *          location:
  *              type: string
  *          latitude:
  *              type: number
  *          longitude:
  *              type: number
- *          total_guests: 
+ *          total_guests:
  *              type: number
- *          total_beds: 
+ *          total_beds:
  *              type: number
- *          total_bedroom: 
+ *          total_bedroom:
  *              type: number
  *          total_bathroom:
  *              type: number
- *          rating: 
+ *          rating:
  *              type: number
- *          this_place_offers: 
+ *          this_place_offers:
  *                  type: aray
- *          property_type: 
+ *          property_type:
  *              type: string
  *          type_of_place:
  *              type: string
@@ -100,7 +99,7 @@ const router = express.Router();
  *             this_place_offers: [service offers by this house in array]
  *             property_type: property type i.e entire place, private room, shared room
  *             type_of_place: type of place i.e house, flat, hotel, guest house
- *             
+ *
  */
 
 /**
@@ -109,7 +108,7 @@ const router = express.Router();
  *      post:
  *         summary: Create a new homes
  *         tags: [Homes]
- *         security: 
+ *         security:
  *             - bearerAuth: []
  *         requestBody:
  *             required: true
@@ -120,7 +119,7 @@ const router = express.Router();
  *         responses:
  *              201:
  *                 description: the list of homes
- *                 content: 
+ *                 content:
  *                      application/json:
  *                          schema:
  *                            items:
@@ -129,34 +128,80 @@ const router = express.Router();
  *                 description: Unauthorized access
  *              404:
  *                 description: Data not found
- *  
+ *
  */
 
 // @desc        Create new home
 // @route       POST /home/create-home
-router.post("/create-home",Create_Home);
+router.post("/create-home", Create_Home);
 
 // swagger schema get all homes
 /**
  * @swagger
  * components:
- *  schemas:    
+ *  schemas:
  *    Get_all_homes:
  *      type: object
  *      required:
- *          - dataLimit,
+ *          - dataLimit
  *          - pageNo
+ *          - keyword
+ *          - minPrice
+ *          - maxPrice
+ *          - typeOfPlace
+ *          - bedrooms
+ *          - beds
+ *          - bathroom
+ *          - guests
+ *          - propertyType
+ *          - amenities
  *      properties:
  *          dataLimit:
  *              type: string
- *              description: auto generated id of the home
+ *              description: Total number of records want to show
  *          pageNo:
  *              type: string
- *              description: the book title *          
+ *              description: Current no of page
+ *          keyword:
+ *              type: string
+ *              description: Enter home name to get result
+ *          minPrice:
+ *              type: number
+ *              description: Enter the minimum price of home to search
+ *          maxPrice:
+ *              type: number
+ *              description: Enter the maximum price of home to get result
+ *          typeOfPlace:
+ *              type: string
+ *              description: Enter the place type ex- entire place, private room, etc
+ *          bedrooms:
+ *              type: number
+ *              description: Enter the total number of bedroom available in home
+ *          beds: 
+ *              type: number
+ *              description: Enter the available beds in the room
+ *          bathroom:
+ *              type: number
+ *              description: Enter the total number of bathroom available in home
+ *          propertyType:
+ *              type: string
+ *              description: Enter the property type ex- house, flae t, hotel, etc
+ *          amenities:
+ *              type: string
+ *              description: Enter amenities in array
  *      example:
  *             dataLimit: 10
  *             pageNo: 1
- * 
+ *             keyword: ""
+ *             minPrice: ""
+ *             maxPrice: ""
+ *             typeOfPlace: [""]
+ *             bedrooms: ""
+ *             beds: ""
+ *             bathroom: ""
+ *             guests: ""
+ *             propertyType: ""
+ *             amenities: [""]
  */
 
 /**
@@ -176,7 +221,7 @@ router.post("/create-home",Create_Home);
  *         responses:
  *              200:
  *                 description: the list of homes
- *                 content: 
+ *                 content:
  *                      application/json:
  *                          schema:
  *                            type: array
@@ -184,7 +229,7 @@ router.post("/create-home",Create_Home);
  *                              $ref: '#/components/schemas/Get_all_homes'
  *              404:
  *                 description: Data not found
- *  
+ *
  */
 
 // @desc        Get all home
@@ -195,14 +240,14 @@ router.post("/get-all-homes", Get_All_Homes);
 /**
  * @swagger
  * components:
- *  schemas:    
+ *  schemas:
  *    Get_single_homes:
  *      type: object
  *      required:
  *          - id
  *      properties:
  *          id:
- *              type: string       
+ *              type: string
  *      example:
  *             id: ID of a registered home
  */
@@ -218,20 +263,20 @@ router.post("/get-all-homes", Get_All_Homes);
  *    parameters:
  *      - in: path
  *        name: id
- *        schema: 
+ *        schema:
  *          type: string
  *        required: true
  *        description: The home id
  *    responses:
  *       200:
  *        description: the list of homes
- *        content: 
+ *        content:
  *             application/json:
  *                schema:
  *                   $ref: '#/components/schemas/Get_single_homes'
  *       404:
  *          description: Data not found
- * 
+ *
  */
 
 // @desc        Get single home by params ID
@@ -244,7 +289,7 @@ router.post("/get-single-home/:id", Get_Single_Home);
  *   post:
  *    summary: Update single home by id
  *    tags: [Homes]
- *    security: 
+ *    security:
  *       - bearerAuth: []
  *    requestBody:
  *         required: true
@@ -255,14 +300,14 @@ router.post("/get-single-home/:id", Get_Single_Home);
  *    parameters:
  *      - in: path
  *        name: id
- *        schema: 
+ *        schema:
  *          type: string
  *        required: true
  *        description: The home id
  *    responses:
  *       200:
  *        description: the list of homes
- *        content: 
+ *        content:
  *             application/json:
  *                schema:
  *                   $ref: '#/components/schemas/Create_homes'
@@ -285,71 +330,71 @@ router.post("/update-single-home/:id", auth, Update_Single_Home);
  *    parameters:
  *      - in: path
  *        name: id
- *        schema: 
+ *        schema:
  *          type: string
  *        required: true
  *        description: The home id
  *    responses:
  *       200:
  *        description: the list of homes
- *        content: 
+ *        content:
  *             application/json:
  *                schema:
  *                   $ref: '#/components/schemas/Get_single_homes'
  *       404:
  *          description: Data not found
- * 
+ *
  */
 
 // @desc        Delete single home by ID
 // @route       POST /home/delete-single-home/:id
 router.post("/delete-single-home/:id", auth, Delete_Single_Home);
 
-// swagger schema get single homes
-/**
- * @swagger
- * components:
- *  schemas:    
- *    search-home:
- *      type: object
- *      required:
- *          - keyword
- *      properties:
- *          keyword:
- *              type: string       
- *      example:
- *             keyword: registered home name
- */
+// // swagger schema get single homes
+// /**
+//  * @swagger
+//  * components:
+//  *  schemas:
+//  *    search-home:
+//  *      type: object
+//  *      required:
+//  *          - keyword
+//  *      properties:
+//  *          keyword:
+//  *              type: string
+//  *      example:
+//  *             keyword: registered home name
+//  */
 
-/**
- * @swagger
- * /home/search-home:
- *   get:
- *    summary: Search home by home name
- *    tags: [Homes]
- *    security: 
- *       - bearerAuth: []
- *    parameters:
- *      - in: query
- *        name: keyword
- *        schema: 
- *          type: string
- *        required: true
- *        description: The search keyword home name
- *    responses:
- *       200:
- *        description: the list of homes
- *        content: 
- *             application/json:
- *                schema:
- *                   $ref: '#/components/schemas/search-home'
- *       404:
- *          description: Data not found
- */
+// /**
+//  * @swagger
+//  * /home/search-home:
+//  *   get:
+//  *    summary: Search home by home name
+//  *    tags: [Homes]
+//  *    security:
+//  *       - bearerAuth: []
+//  *    parameters:
+//  *      - in: query
+//  *        name: keyword
+//  *        schema:
+//  *          type: string
+//  *        required: true
+//  *        description: The search keyword home name
+//  *    responses:
+//  *       200:
+//  *        description: the list of homes
+//  *        content:
+//  *             application/json:
+//  *                schema:
+//  *                   $ref: '#/components/schemas/search-home'
+//  *       404:
+//  *          description: Data not found
+//  */
 
-// @desc        Search home by query
-// @route       GET /home/search-home?keyword=
-router.get("/search-home", Search_Homes);
+// // @desc        Search home by query
+// // @route       GET /home/search-home?keyword=
+// router.get("/search-home", Search_Homes);
 
 /**
  * @swagger
@@ -362,22 +407,21 @@ router.get("/search-home", Search_Homes);
  *    parameters:
  *      - in: path
  *        name: id
- *        schema: 
+ *        schema:
  *          type: string
  *        required: true
  *        description: The home id
  *    responses:
  *       200:
  *        description: the list of homes
- *        content: 
+ *        content:
  *             application/json:
  *                schema:
  *                   $ref: '#/components/schemas/Get_single_homes'
  *       404:
  *          description: Data not found
- * 
+ *
  */
-
 
 // @desc        Add home to Favourites
 // @route       POST /home/add-to-favourite/:id

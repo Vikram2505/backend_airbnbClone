@@ -92,17 +92,31 @@ export const Get_All_Homes = async (req, res) => {
     bedrooms,
     beds,
     bathroom,
-    guests,
     propertyType,
     amenities,
   } = req.body;
   let AllHomes = [];
-    console.log(req.body);
   try {
     const limit = dataLimit;
     const startIndex = (Number(pageNo) - 1) * limit;
     const total = await HomeSchema.countDocuments({});
 
+    if (minPrice !== "" && maxPrice !== "") {
+      let result = await HomeSchema.find({
+        deleted: false,
+        price: { $gt: minPrice, $lt: maxPrice },
+      })
+        .limit(limit)
+        .skip(startIndex)
+        .sort({ _id: -1 })
+        .select(
+          "home_name location total_guest total_beds total_bedroom total_bathroom price thumbnail_image rating this_place_offers"
+        )
+        .exec();
+      result.map((item) => {
+        AllHomes.push(item);
+      });
+    }
     if (keyword !== "") {
       const title = new RegExp(keyword, "i");
       let result = await HomeSchema.find({
@@ -151,23 +165,7 @@ export const Get_All_Homes = async (req, res) => {
       result.map((item) => {
         AllHomes.push(item);
       });
-    }
-    if (guests !== "") {
-      let result = await HomeSchema.find({
-        deleted: false,
-        total_guest: guests,
-      })
-        .limit(limit)
-        .skip(startIndex)
-        .sort({ _id: -1 })
-        .select(
-          "home_name location total_guest total_beds total_bedroom total_bathroom price thumbnail_image rating this_place_offers"
-        )
-        .exec();
-      result.map((item) => {
-        AllHomes.push(item);
-      });
-    }
+    }   
     if (beds !== "") {
       let result = await HomeSchema.find({
         deleted: false,
@@ -184,15 +182,66 @@ export const Get_All_Homes = async (req, res) => {
         AllHomes.push(item);
       });
     }
-
+    if (typeOfPlace !== "") {
+      let result = await HomeSchema.find({
+        deleted: false,
+        type_of_place: { $in: typeOfPlace },
+      })
+        .limit(limit)
+        .skip(startIndex)
+        .sort({ _id: -1 })
+        .select(
+          "home_name location total_guest total_beds total_bedroom total_bathroom price thumbnail_image rating this_place_offers"
+        )
+        .exec();
+      result.map((item) => {
+        AllHomes.push(item);
+      });
+    }
+    if (propertyType !== "") {
+      let result = await HomeSchema.find({
+        deleted: false,
+        property_type: { $in: propertyType },
+      })
+        .limit(limit)
+        .skip(startIndex)
+        .sort({ _id: -1 })
+        .select(
+          "home_name location total_guest total_beds total_bedroom total_bathroom price thumbnail_image rating this_place_offers"
+        )
+        .exec();
+      result.map((item) => {
+        AllHomes.push(item);
+      });
+    }
+    if (amenities !== "") {
+      let result = await HomeSchema.find({
+        deleted: false,
+        this_place_offers: { $in: amenities },
+      })
+        .limit(limit)
+        .skip(startIndex)
+        .sort({ _id: -1 })
+        .select(
+          "home_name location total_guest total_beds total_bedroom total_bathroom price thumbnail_image rating this_place_offers"
+        )
+        .exec();
+      result.map((item) => {
+        AllHomes.push(item);
+      });
+    }
+    
     if (
       bedrooms === "" &&
       bathroom === "" &&
-      guests === "" &&
       beds === "" &&
-      keyword === ""
+      keyword === "" &&
+      minPrice === "" &&
+      maxPrice === "" &&
+      typeOfPlace.length === 0 &&
+      propertyType.length === 0 &&
+      amenities.length === 0
     ) {
-      console.log("second bedroom");
       let result = await HomeSchema.find({
         deleted: false,
       })
@@ -303,31 +352,31 @@ export const Delete_Single_Home = async (req, res) => {
   }
 };
 
-/**
- * @desc    search home by query
- * @route   GET /home/search-home?keyword=
- */
-export const Search_Homes = async (req, res) => {
-  const { keyword } = req.query;
-  try {
-    const title = new RegExp(keyword, "i");
-    const search = await HomeSchema.find({ home_name: title })
-      .select(
-        "home_name location total_guest total_beds total_bedroom total_bathroom price thumbnail_image rating this_place_offers"
-      )
-      .exec();
-    res.status(200).json({
-      count: search.length,
-      search,
-      status: "success",
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: "error",
-      message: req.message,
-    });
-  }
-};
+// /**
+//  * @desc    search home by query
+//  * @route   GET /home/search-home?keyword=
+//  */
+// export const Search_Homes = async (req, res) => {
+//   const { keyword } = req.query;
+//   try {
+//     const title = new RegExp(keyword, "i");
+//     const search = await HomeSchema.find({ home_name: title })
+//       .select(
+//         "home_name location total_guest total_beds total_bedroom total_bathroom price thumbnail_image rating this_place_offers"
+//       )
+//       .exec();
+//     res.status(200).json({
+//       count: search.length,
+//       search,
+//       status: "success",
+//     });
+//   } catch (error) {
+//     res.status(404).json({
+//       status: "error",
+//       message: req.message,
+//     });
+//   }
+// };
 
 /**
  * @desc    Add your home to favourite

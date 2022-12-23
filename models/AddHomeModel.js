@@ -40,8 +40,7 @@ const AddHomeSchema = mongoose.Schema({
         default: []
     },
     property_type: {
-        type: [String],
-        default: []
+        type: String,
     },
     type_of_place: {
         type: String,
