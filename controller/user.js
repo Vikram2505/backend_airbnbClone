@@ -4,6 +4,8 @@ import UserModel from "../models/UserModel.js";
 
 const secret = "test";
 
+// client ID:- 743903588326-b1jknh0c9mkjptiuakhss1rilusbvqua.apps.googleusercontent.com
+// client secret: - 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
 // @desc        create user
 // @route       /user/signup
 export const SignUp = async (req, res) => {
@@ -54,11 +56,37 @@ export const SignIn = async (req, res) => {
         status: "Invalid password",
       });
     }
-    const token = jwt.sign({email: OldUser.email, id: OldUser._id}, secret)
-      res.status(200).json({
-        token,
-        status: "success"
-      });
+    const token = jwt.sign({ email: OldUser.email, id: OldUser._id }, secret);
+    res.status(200).json({
+      token,
+      status: "success",
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "failed",
+      message: err.message,
+    });
+  }
+};
+
+export const GoogleSignIn = async (req, res) => {
+  const { email, name, token, googleId } = req.body;
+  try {
+    const oldUser = await UserModel.findOne({ email });
+    if (oldUser) {
+      const result = { _id: oldUser._id.toString(), email, name };
+      return res.status(200).json({ result, token });
+    }
+    const result = await UserModel.create({
+      email,
+      name,
+     id: googleId,
+    });
+    res.status(201).json({
+      status: "success",
+      result,
+      token,
+    });
   } catch (err) {
     res.status(500).json({
       status: "failed",

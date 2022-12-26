@@ -74,6 +74,17 @@ const options = {
 
 const specs = swaggerJSDoc(options);
 
+// Prevent API from CORS errors
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*'),
+  res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept, Authorization')
+  if(req.method === 'OPTIONS'){
+      res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+      return res.status(200).json({})
+  }
+  next();
+})
+
 // Routes for API
 app.get("/", (req, res) => {
   res.send(
@@ -86,6 +97,24 @@ app.get("/", (req, res) => {
 app.use("/user", userRouter);
 app.use("/home", homesRouter);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs, { customCss }));
+
+
+// Error handling for all routes
+app.use((req, res, next) => {
+  const error = new Error('Method not found');
+  error.status = 404 
+  next(error)
+})
+
+app.use((error, req, res, next) => {
+  res.status(error.status || 500);
+  res.json({
+      error: {
+          message: error.message
+      }
+  })
+})
+
 
 app.listen(
   PORT,

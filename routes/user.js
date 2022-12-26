@@ -1,5 +1,5 @@
 import express from 'express';
-import { SignUp, SignIn } from '../controller/user.js';
+import { SignUp, SignIn, GoogleSignIn } from '../controller/user.js';
 const router = express.Router();
 
 /**
@@ -118,4 +118,5 @@ router.post("/signup", SignUp);
 // @route       /user/signin
 router.post("/signin", SignIn);
 
+router.post("/google-sign-in", GoogleSignIn)
 export default router;

@@ -351,32 +351,6 @@ export const Delete_Single_Home = async (req, res) => {
   }
 };
 
-// /**
-//  * @desc    search home by query
-//  * @route   GET /home/search-home?keyword=
-//  */
-// export const Search_Homes = async (req, res) => {
-//   const { keyword } = req.query;
-//   try {
-//     const title = new RegExp(keyword, "i");
-//     const search = await HomeSchema.find({ home_name: title })
-//       .select(
-//         "home_name location total_guest total_beds total_bedroom total_bathroom price thumbnail_image rating this_place_offers"
-//       )
-//       .exec();
-//     res.status(200).json({
-//       count: search.length,
-//       search,
-//       status: "success",
-//     });
-//   } catch (error) {
-//     res.status(404).json({
-//       status: "error",
-//       message: req.message,
-//     });
-//   }
-// };
-
 /**
  * @desc    Add your home to favourite
  * @route   POST /home/add-to-favourite/:id

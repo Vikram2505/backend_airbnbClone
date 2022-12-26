@@ -283,9 +283,69 @@ router.post("/get-single-home/:id", Get_Single_Home);
  *    requestBody:
  *         required: true
  *         content:
- *              application/json:
+ *              multipart/form-data:
  *                  schema:
- *                      $ref: '#/components/schemas/Create_homes'
+ *                      schema:
+ *                      type: object
+ *                      required:
+ *                           - home_name
+ *                           - owner_name
+ *                           - owner_email
+ *                           - owner_phoneNo
+ *                           - home_desc
+ *                           - home_image
+ *                           - owner_image
+ *                           - price
+ *                           - location
+ *                      properties:
+ *                        home_name:
+ *                           type: string
+ *                        owner_name:
+ *                           type: string
+ *                        owner_email:
+ *                           type: string
+ *                        owner_phoneNo:
+ *                           type: string
+ *                        home_desc:
+ *                           type: string
+ *                        home_image:
+ *                           type: array
+ *                           items:
+ *                             type: string
+ *                             format: binary
+ *                        owner_image:
+ *                           type: string
+ *                           format: binary
+ *                        price:
+ *                           type: number
+ *                        location:
+ *                           type: string
+ *                        home_city:
+ *                           type: string
+ *                        home_state:
+ *                           type: string
+ *                        home_zipCode:
+ *                           type: number
+ *                        latitude:
+ *                           type: number
+ *                        longitude:
+ *                           type: number
+ *                        total_guests:
+ *                           type: number
+ *                        total_beds:
+ *                           type: number
+ *                        total_bedroom:
+ *                           type: number
+ *                        total_bathroom:
+ *                           type: number
+ *                        rating:
+ *                           type: number
+ *                        this_place_offers:
+ *                           type: array
+ *                        property_type:
+ *                           type: string
+ *                        type_of_place:
+ *                           type: string
  *    parameters:
  *      - in: path
  *        name: id
@@ -381,9 +441,6 @@ router.post("/delete-single-home/:id", auth, Delete_Single_Home);
 //  *          description: Data not found
 //  */
 
-// // @desc        Search home by query
-// // @route       GET /home/search-home?keyword=
-// router.get("/search-home", Search_Homes);
 
 /**
  * @swagger
