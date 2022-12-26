@@ -42,12 +42,14 @@ const options = {
       version: "1.0.1",
       description: "An Express Library API",
       contact: {
+        name: "Vikram Rambhad",
         email: "vikramrambhad25@gmail.com",
+        url: "https://aboutvikram.vercel.app/"
       },
-      license: {
-        name: "Apache 2.0",
-        url: "http://www.apache.org/licenses/LICENSE-2.0.html",
-      },
+      // license: {
+      //   name: "Apache 2.0",
+      //   url: "http://www.apache.org/licenses/LICENSE-2.0.html",
+      // },
     },
     components: {
       securitySchemes: {

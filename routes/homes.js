@@ -28,67 +28,19 @@ const router = express.Router();
  *  schemas:
  *    Create_homes:
  *      type: object
- *      required:
- *          - home_name
- *          - home_desc,
- *          - home_image
- *          - thumbnail_image
- *          - owner_image
- *          - price
- *          - location
- *          - latitude
- *          - longitude
- *          - total_guests,
- *          - total_beds,
- *          - total_bedroom,
- *          - total_bathroom,
- *          - rating,
- *          - this_place_offers,
- *          - property_type,
- *          - type_of_place,
- *      properties:
- *          home_name:
- *              type: string
- *          home_desc:
- *              type: string
- *          home_image:
- *              type: aray
- *          thumbnail_image:
- *              type: string
- *          owner_image:
- *              type: string
- *          price:
- *              type: number
- *          location:
- *              type: string
- *          latitude:
- *              type: number
- *          longitude:
- *              type: number
- *          total_guests:
- *              type: number
- *          total_beds:
- *              type: number
- *          total_bedroom:
- *              type: number
- *          total_bathroom:
- *              type: number
- *          rating:
- *              type: number
- *          this_place_offers:
- *                  type: aray
- *          property_type:
- *              type: string
- *          type_of_place:
- *              type: string
  *      example:
  *             home_name: House of Albetroz
+ *             owner_name: Name of home owner
+ *             owner_email: Owner email address
+ *             owner_phoneNo: Owner email address
  *             home_desc: description of your house
  *             home_image: [upload home image]
- *             thumbnail_image: upload thumbnail image
  *             owner_image: upload owner image
  *             price: price of the house
  *             location: location of the house
+ *             home_city: Enter the City where home is
+ *             home_state: Enter the State of home
+ *             home_zipCode: enter the Zipcode of home
  *             latitude: latitude of location
  *             longitude: longitude value
  *             total_guests: total number of guests
@@ -113,9 +65,68 @@ const router = express.Router();
  *         requestBody:
  *             required: true
  *             content:
- *                application/json:
- *                      schema:
- *                         $ref: '#/components/schemas/Create_homes'
+ *                multipart/form-data:                   
+ *                    schema:
+ *                      type: object
+ *                      required:
+ *                           - home_name
+ *                           - owner_name
+ *                           - owner_email
+ *                           - owner_phoneNo
+ *                           - home_desc
+ *                           - home_image
+ *                           - owner_image
+ *                           - price
+ *                           - location
+ *                      properties:
+ *                        home_name:
+ *                           type: string
+ *                        owner_name:
+ *                           type: string
+ *                        owner_email:
+ *                           type: string
+ *                        owner_phoneNo:
+ *                           type: string
+ *                        home_desc:
+ *                           type: string
+ *                        home_image:
+ *                           type: array
+ *                           items:
+ *                             type: string
+ *                             format: binary
+ *                        owner_image:
+ *                           type: string
+ *                           format: binary
+ *                        price:
+ *                           type: number
+ *                        location:
+ *                           type: string
+ *                        home_city:
+ *                           type: string
+ *                        home_state:
+ *                           type: string
+ *                        home_zipCode:
+ *                           type: number
+ *                        latitude:
+ *                           type: number
+ *                        longitude:
+ *                           type: number
+ *                        total_guests:
+ *                           type: number
+ *                        total_beds:
+ *                           type: number
+ *                        total_bedroom:
+ *                           type: number
+ *                        total_bathroom:
+ *                           type: number
+ *                        rating:
+ *                           type: number
+ *                        this_place_offers:
+ *                           type: array
+ *                        property_type:
+ *                           type: string
+ *                        type_of_place:
+ *                           type: string
  *         responses:
  *              201:
  *                 description: the list of homes
@@ -141,54 +152,6 @@ router.post("/create-home", Create_Home);
  * components:
  *  schemas:
  *    Get_all_homes:
- *      type: object
- *      required:
- *          - dataLimit
- *          - pageNo
- *          - keyword
- *          - minPrice
- *          - maxPrice
- *          - typeOfPlace
- *          - bedrooms
- *          - beds
- *          - bathroom
- *          - guests
- *          - propertyType
- *          - amenities
- *      properties:
- *          dataLimit:
- *              type: string
- *              description: Total number of records want to show
- *          pageNo:
- *              type: string
- *              description: Current no of page
- *          keyword:
- *              type: string
- *              description: Enter home name to get result
- *          minPrice:
- *              type: number
- *              description: Enter the minimum price of home to search
- *          maxPrice:
- *              type: number
- *              description: Enter the maximum price of home to get result
- *          typeOfPlace:
- *              type: string
- *              description: Enter the place type ex- entire place, private room, etc
- *          bedrooms:
- *              type: number
- *              description: Enter the total number of bedroom available in home
- *          beds: 
- *              type: number
- *              description: Enter the available beds in the room
- *          bathroom:
- *              type: number
- *              description: Enter the total number of bathroom available in home
- *          propertyType:
- *              type: string
- *              description: Enter the property type ex- house, flae t, hotel, etc
- *          amenities:
- *              type: string
- *              description: Enter amenities in array
  *      example:
  *             dataLimit: 10
  *             pageNo: 1
@@ -215,9 +178,35 @@ router.post("/create-home", Create_Home);
  *         requestBody:
  *             required: true
  *             content:
- *                application/json:
+ *                multipart/form-data:
  *                      schema:
- *                         $ref: '#/components/schemas/Get_all_homes'
+ *                         type: object
+ *                         required:
+ *                              - dataLimit
+ *                              - pageNo
+ *                         properties:
+ *                              dataLimit:
+ *                                 type: string
+ *                              pageNo:
+ *                                 type: string
+ *                              keyword:
+ *                                 type: string
+ *                              minPrice:
+ *                                 type: number
+ *                              maxPrice:
+ *                                 type: number
+ *                              typeOfPlace:
+ *                                 type: string
+ *                              bedrooms:
+ *                                 type: number
+ *                              beds: 
+ *                                 type: number
+ *                              bathroom:
+ *                                 type: number
+ *                              propertyType:
+ *                                 type: string
+ *                              amenities:
+ *                                 type: array
  *         responses:
  *              200:
  *                 description: the list of homes

@@ -62,7 +62,7 @@ const router = express.Router();
  *         requestBody:
  *             required: true
  *             content:
- *                application/json:
+ *                multipart/form-data:
  *                      schema:
  *                         $ref: '#/components/schemas/Sign_up'
  *         responses:
@@ -94,14 +94,14 @@ router.post("/signup", SignUp);
  *         requestBody:
  *             required: true
  *             content:
- *                application/json:
+ *                multipart/form-data:
  *                      schema:
  *                         $ref: '#/components/schemas/Sign_in'
  *         responses:
  *              200:
  *                 description: the list of homes
  *                 content: 
- *                      application/json:
+ *                      multipart/form-data:
  *                          schema:
  *                            type: array
  *                            items:

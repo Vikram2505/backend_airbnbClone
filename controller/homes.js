@@ -24,17 +24,16 @@ export const Create_Home = async (req, res) => {
   //receive uploaded home images
   const homeImages = req?.files?.home_image;
   const ownerImage = req?.files?.owner_image;
-
   if (homeImages?.size > 1000000 || ownerImage?.size > 1000000) {
     return res.status(400).json({
       status: "failed",
       message: "Image size must less than 1Mb",
     });
   }
-  if (homeImages.length === undefined) {
+  if (homeImages?.length === undefined || homeImages?.length < 2 ) {
     return res.status(400).json({
       status: "error",
-      message: "Atleast 2 images need to upload",
+      message: "Atleast 5 images need to upload",
     });
   }
   let multipleHomeImages = await homeImages.map((image) =>
@@ -43,12 +42,12 @@ export const Create_Home = async (req, res) => {
   let imageResponses = await Promise.all(multipleHomeImages);
   imageResponses.map((url) => {
     homeImage.push(url.secure_url);
-    fs.rm("tmp", { recursive: true, force: true }, (err) => {
-      if (err) {
-        console.log(err, "attempt to delete temp folder");
-      }
-      console.log("tmp folder is deleted!");
-    });
+  });
+  fs.rm("tmp", { recursive: true, force: true }, (err) => {
+    if (err) {
+      console.log(err, "attempt to delete temp folder");
+    }
+    console.log("tmp folder is deleted!");
   });
 
   let ownerImageUpload =
