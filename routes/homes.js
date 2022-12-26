@@ -11,6 +11,7 @@ import {
 import auth from "../middleware/auth.js";
 
 const router = express.Router();
+
 // Swagger group name
 /**
  * @swagger

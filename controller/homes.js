@@ -31,16 +31,18 @@ export const Get_All_Homes = async (req, res) => {
   const {
     dataLimit,
     pageNo,
-    // minPrice,
-    // maxPrice,
-    // typeOfPlace,
-    // bedrooms,
-    // beds,
-    // bathroom,
-    // guests,
-    // propertyType,
-    // amenities,
+    minPrice,
+    maxPrice,
+    typeOfPlace,
+    bedrooms,
+    beds,
+    bathroom,
+    guests,
+    propertyType,
+    amenities,
   } = req.body;
+
+  console.log(req.body);
   try {
     const limit = dataLimit;
     const startIndex = (Number(pageNo) - 1) * limit;
