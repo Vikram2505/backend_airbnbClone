@@ -11,18 +11,21 @@ import bodyParser from "body-parser";
 
 const app = express();
 
+// NODE.JS application PORT
+const PORT = 3000;
+
 // body parser is use to get form value
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const customCss = fs.readFileSync(process.cwd() + "/swagger.css", "utf8");
+
+// it is used for upload file from local storage
 app.use(
   fileUpload({
     useTempFiles: true,
   })
 );
-// NODE.JS application PORT
-const PORT = 3000;
 
 // Body parser to receive user data
 app.use(morgan("dev")); //to show api hit url in node console
@@ -64,8 +67,9 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3000",
-        // url: 'https://backend-airbnb-clone.vercel.app'
+        // url: "http://localhost:3000",
+        url: 'https://backend-airbnb-clone.vercel.app',
+        description: "My API documentation."
       },
     ],
   },

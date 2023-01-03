@@ -178,7 +178,7 @@ router.post("/create-home", Create_Home);
  *         requestBody:
  *             required: true
  *             content:
- *                multipart/form-data:
+ *                application/json:
  *                      schema:
  *                         type: object
  *                         required:
@@ -186,9 +186,9 @@ router.post("/create-home", Create_Home);
  *                              - pageNo
  *                         properties:
  *                              dataLimit:
- *                                 type: string
+ *                                 type: integer
  *                              pageNo:
- *                                 type: string
+ *                                 type: integer
  *                              keyword:
  *                                 type: string
  *                              minPrice:
@@ -398,49 +398,6 @@ router.post("/update-single-home/:id", auth, Update_Single_Home);
 // @desc        Delete single home by ID
 // @route       POST /home/delete-single-home/:id
 router.post("/delete-single-home/:id", auth, Delete_Single_Home);
-
-// // swagger schema get single homes
-// /**
-//  * @swagger
-//  * components:
-//  *  schemas:
-//  *    search-home:
-//  *      type: object
-//  *      required:
-//  *          - keyword
-//  *      properties:
-//  *          keyword:
-//  *              type: string
-//  *      example:
-//  *             keyword: registered home name
-//  */
-
-// /**
-//  * @swagger
-//  * /home/search-home:
-//  *   get:
-//  *    summary: Search home by home name
-//  *    tags: [Homes]
-//  *    security:
-//  *       - bearerAuth: []
-//  *    parameters:
-//  *      - in: query
-//  *        name: keyword
-//  *        schema:
-//  *          type: string
-//  *        required: true
-//  *        description: The search keyword home name
-//  *    responses:
-//  *       200:
-//  *        description: the list of homes
-//  *        content:
-//  *             application/json:
-//  *                schema:
-//  *                   $ref: '#/components/schemas/search-home'
-//  *       404:
-//  *          description: Data not found
-//  */
-
 
 /**
  * @swagger
