@@ -1,5 +1,5 @@
 import express from 'express';
-import { SignUp, SignIn } from '../controller/user.js';
+import { SignUp, SignIn, GoogleSignIn } from '../controller/user.js';
 const router = express.Router();
 
 /**
@@ -62,7 +62,7 @@ const router = express.Router();
  *         requestBody:
  *             required: true
  *             content:
- *                application/json:
+ *                multipart/form-data:
  *                      schema:
  *                         $ref: '#/components/schemas/Sign_up'
  *         responses:
@@ -94,14 +94,14 @@ router.post("/signup", SignUp);
  *         requestBody:
  *             required: true
  *             content:
- *                application/json:
+ *                multipart/form-data:
  *                      schema:
  *                         $ref: '#/components/schemas/Sign_in'
  *         responses:
  *              200:
  *                 description: the list of homes
  *                 content: 
- *                      application/json:
+ *                      multipart/form-data:
  *                          schema:
  *                            type: array
  *                            items:
@@ -118,4 +118,5 @@ router.post("/signup", SignUp);
 // @route       /user/signin
 router.post("/signin", SignIn);
 
+router.post("/google-sign-in", GoogleSignIn)
 export default router;
