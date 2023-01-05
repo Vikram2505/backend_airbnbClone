@@ -9,6 +9,7 @@ const connectDB = async () => {
       );
       console.log(`MongoDB Connected with ${conn.connection.host}`);
     } else if (process.env.NODE_ENV === "production") {
+      mongoose.set("strictQuery", false);
       const conn = await mongoose.connect(
         "mongodb+srv://vikram:vikram@testapi.yszcywk.mongodb.net/?retryWrites=true&w=majority"
       );

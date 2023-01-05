@@ -20,7 +20,7 @@ cloudinary.config({
 export const Create_Home = async (req, res) => {
   const HomeData = req.body;
   let homeImage = [];
-
+  console.log(req.body);
   try {
     // This function is to rename key of homes image
     function renameKeys(obj, newKeys) {
@@ -34,10 +34,10 @@ export const Create_Home = async (req, res) => {
     //receive uploaded home images
     const homeImages = req?.files;
     const ownerImage = req?.files?.owner_image;
-
-    // if (homeImages === undefined || null || []) {
-    //   throw new Error("Please upload image");
-    // }
+    console.log(homeImages);
+    if (homeImages === null) {
+      throw new Error("Please upload image");
+    }
 
     const renamedObj = renameKeys(homeImages, { "home_image[]": "home_image" });
     // console.log(renamedObj, "homeimage object");
@@ -67,6 +67,7 @@ export const Create_Home = async (req, res) => {
     fs.rm("tmp", { recursive: true, force: true }, (err) => {
       if (err) {
         console.log(err, "attempt to delete temp folder");
+
       }
       console.log("tmp folder is deleted!");
     });
@@ -117,13 +118,13 @@ export const Get_All_Homes = async (req, res) => {
     amenities,
   } = req.body;
   let AllHomes = [];
+  let total = null;
   try {
     const limit = dataLimit;
     const startIndex = (Number(pageNo) - 1) * limit;
-    const total = await HomeSchema.countDocuments({});
+    total = await HomeSchema.countDocuments({});
 
     if (minPrice !== "" && maxPrice !== "") {
-      console.log("firstr");
       let result = await HomeSchema.find({
         deleted: false,
         price: { $gt: minPrice, $lt: maxPrice },
@@ -134,14 +135,22 @@ export const Get_All_Homes = async (req, res) => {
           "home_name location total_beds total_bedroom total_bathroom price home_image rating this_place_offers"
         )
         .exec();
+      total = await HomeSchema.find({
+        deleted: false,
+        price: { $gt: minPrice, $lt: maxPrice },
+      })
+        .count()
+        .exec();
+
       result.map((item) => {
         AllHomes.push(item);
       });
     }
+
     if (keyword !== "") {
       const title = new RegExp(keyword, "i");
       let result = await HomeSchema.find({
-        // deleted: false,
+        deleted: false,
         location: title,
       })
         .limit(limit)
@@ -149,6 +158,9 @@ export const Get_All_Homes = async (req, res) => {
         .select(
           "home_name location total_beds total_bedroom total_bathroom price home_image rating this_place_offers"
         )
+        .exec();
+      total = await HomeSchema.find({ deleted: false, location: title })
+        .count()
         .exec();
       result.map((item) => {
         AllHomes.push(item);
@@ -165,6 +177,9 @@ export const Get_All_Homes = async (req, res) => {
           "home_name location total_beds total_bedroom total_bathroom price home_image rating this_place_offers"
         )
         .exec();
+      total = await HomeSchema.find({ deleted: false, total_bedroom: bedrooms })
+        .count()
+        .exec();
       result.map((item) => {
         AllHomes.push(item);
       });
@@ -179,6 +194,12 @@ export const Get_All_Homes = async (req, res) => {
         .select(
           "home_name location total_beds total_bedroom total_bathroom price home_image rating this_place_offers"
         )
+        .exec();
+      total = await HomeSchema.find({
+        deleted: false,
+        total_bathroom: bathroom,
+      })
+        .count()
         .exec();
       result.map((item) => {
         AllHomes.push(item);
@@ -195,6 +216,9 @@ export const Get_All_Homes = async (req, res) => {
           "home_name location total_beds total_bedroom total_bathroom price home_image rating this_place_offers"
         )
         .exec();
+      total = await HomeSchema.find({ deleted: false, total_beds: beds })
+        .count()
+        .exec();
       result.map((item) => {
         AllHomes.push(item);
       });
@@ -209,6 +233,12 @@ export const Get_All_Homes = async (req, res) => {
         .select(
           "home_name location total_beds total_bedroom total_bathroom price home_image rating this_place_offers"
         )
+        .exec();
+      total = await HomeSchema.find({
+        deleted: false,
+        type_of_place: { $in: typeOfPlace },
+      })
+        .count()
         .exec();
       result.map((item) => {
         AllHomes.push(item);
@@ -225,6 +255,12 @@ export const Get_All_Homes = async (req, res) => {
           "home_name location total_beds total_bedroom total_bathroom price home_image rating this_place_offers"
         )
         .exec();
+      total = await HomeSchema.find({
+        deleted: false,
+        property_type: { $in: propertyType },
+      })
+        .count()
+        .exec();
       result.map((item) => {
         AllHomes.push(item);
       });
@@ -239,6 +275,12 @@ export const Get_All_Homes = async (req, res) => {
         .select(
           "home_name location total_beds total_bedroom total_bathroom price home_image rating this_place_offers"
         )
+        .exec();
+      total = await HomeSchema.find({
+        deleted: false,
+        this_place_offers: { $in: amenities },
+      })
+        .count()
         .exec();
       result.map((item) => {
         AllHomes.push(item);
@@ -271,7 +313,6 @@ export const Get_All_Homes = async (req, res) => {
     res.status(200).json({
       currentPage: Number(pageNo),
       count: total,
-      count: AllHomes.length,
       numberOfPages: Math.ceil(total / limit),
       AllHomes,
       status: "success",

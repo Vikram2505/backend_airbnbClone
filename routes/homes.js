@@ -178,7 +178,7 @@ router.post("/create-home", Create_Home);
  *         requestBody:
  *             required: true
  *             content:
- *                application/json:
+ *                multipart/form-data: 
  *                      schema:
  *                         type: object
  *                         required:
