@@ -23,66 +23,65 @@ export const Create_Home = async (req, res) => {
   console.log(req.body);
   try {
     // This function is to rename key of homes image
-    function renameKeys(obj, newKeys) {
-      const keyValues = Object?.keys(obj).map((key) => {
-        const newKey = newKeys[key] || key;
-        return { [newKey]: obj[key] };
-      });
-      return Object.assign({}, ...keyValues);
-    }
+    // function renameKeys(obj, newKeys) {
+    //   const keyValues = Object?.keys(obj).map((key) => {
+    //     const newKey = newKeys[key] || key;
+    //     return { [newKey]: obj[key] };
+    //   });
+    //   return Object.assign({}, ...keyValues);
+    // }
 
     //receive uploaded home images
-    const homeImages = req?.files;
-    const ownerImage = req?.files?.owner_image;
-    console.log(homeImages);
-    if (homeImages === null) {
-      throw new Error("Please upload image");
-    }
+    // const homeImages = req?.files;
+    // const ownerImage = req?.files?.owner_image;
+    // console.log(homeImages);
+    // if (homeImages === null) {
+    //   throw new Error("Please upload image");
+    // }
 
-    const renamedObj = renameKeys(homeImages, { "home_image[]": "home_image" });
-    // console.log(renamedObj, "homeimage object");
+    // const renamedObj = renameKeys(homeImages, { "home_image[]": "home_image" });
 
-    if (renamedObj?.size > 1000000 || ownerImage?.size > 1000000) {
-      throw new Error("Image size must less than 1Mb");
-    }
+    // if (renamedObj?.size > 1000000 || ownerImage?.size > 1000000) {
+    //   throw new Error("Image size must less than 1Mb");
+    // }
 
     // check if image size is less than 2
-    if (
-      renamedObj?.home_image.length === undefined ||
-      renamedObj?.home_image.length < 2
-    ) {
-      throw new Error("Atleast 2 images need to upload");
-    }
+    // if (
+    //   renamedObj?.home_image.length === undefined ||
+    //   renamedObj?.home_image.length < 2
+    // ) {
+    //   throw new Error("Atleast 2 images need to upload");
+    // }
 
     // multiple homes image upload
-    let multipleHomeImages = await renamedObj.home_image.map((image) =>
-      cloudinary.uploader.upload(image.tempFilePath)
-    );
-    let imageResponses = await Promise.all(multipleHomeImages);
-    imageResponses.map((url) => {
-      homeImage.push(url.secure_url);
-    });
+    // let multipleHomeImages = await renamedObj.home_image.map((image) =>
+    //   cloudinary.uploader.upload(image.tempFilePath)
+    // );
+    // let imageResponses = await Promise.all(multipleHomeImages);
+    // imageResponses.map((url) => {
+    //   homeImage.push(url.secure_url);
+    // });
 
     // Delete temp folder created at uploading file
-    fs.rm("tmp", { recursive: true, force: true }, (err) => {
-      if (err) {
-        console.log(err, "attempt to delete temp folder");
+    // fs.rm("tmp", { recursive: true, force: true }, (err) => {
+    //   if (err) {
+    //     console.log(err, "attempt to delete temp folder");
 
-      }
-      console.log("tmp folder is deleted!");
-    });
+    //   }
+    //   console.log("tmp folder is deleted!");
+    // });
 
     // upload single owner image
-    let ownerImageUpload =
-      ownerImage === undefined
-        ? ""
-        : await cloudinary.uploader.upload(ownerImage.tempFilePath);
+    // let ownerImageUpload =
+    //   ownerImage === undefined
+    //     ? ""
+    //     : await cloudinary.uploader.upload(ownerImage.tempFilePath);
 
     const NewHome = new HomeSchema({
       ...HomeData,
       creator: req.userId,
-      home_image: homeImage,
-      owner_image: ownerImageUpload.secure_url,
+      // home_image: homeImage,
+      // owner_image: ownerImageUpload.secure_url,
       deleted: false,
       created_at: new Date().toISOString(),
     });
