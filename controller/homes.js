@@ -86,7 +86,7 @@ export const Create_Home = async (req, res) => {
       created_at: new Date().toISOString(),
     });
 
-    await NewHome.save();
+    // await NewHome.save();
     res.status(201).json({
       status: "success",
       NewHome,
