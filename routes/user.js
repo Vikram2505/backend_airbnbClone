@@ -1,5 +1,7 @@
 import express from 'express';
 import { SignUp, SignIn, GoogleSignIn } from '../controller/user.js';
+import auth from '../middleware/auth.js';
+import { Role } from '../_helpers/role.js';
 const router = express.Router();
 
 /**
@@ -115,7 +117,7 @@ router.post("/signup", SignUp);
 
 
 // @desc        login user
-// @route       /user/signin
+// @route       /user/signin auth([Role.Admin]),
 router.post("/signin", SignIn);
 
 router.post("/google-sign-in", GoogleSignIn)

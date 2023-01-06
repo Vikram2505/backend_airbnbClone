@@ -10,6 +10,8 @@ import {
   Update_Single_Home,
 } from "../controller/homes.js";
 import auth from "../middleware/auth.js";
+import verifyRole from "../middleware/verifyRole.js";
+import { Role } from "../_helpers/role.js";
 
 const router = express.Router();
 
@@ -144,7 +146,7 @@ const router = express.Router();
 
 // @desc        Create new home
 // @route       POST /home/create-home
-router.post("/create-home", Create_Home);
+router.post("/create-home", auth, Create_Home);
 
 // swagger schema get all homes
 /**
@@ -178,7 +180,7 @@ router.post("/create-home", Create_Home);
  *         requestBody:
  *             required: true
  *             content:
- *                multipart/form-data:
+ *                multipart/form-data: 
  *                      schema:
  *                         type: object
  *                         required:
@@ -186,9 +188,9 @@ router.post("/create-home", Create_Home);
  *                              - pageNo
  *                         properties:
  *                              dataLimit:
- *                                 type: string
+ *                                 type: integer
  *                              pageNo:
- *                                 type: string
+ *                                 type: integer
  *                              keyword:
  *                                 type: string
  *                              minPrice:
@@ -399,49 +401,6 @@ router.post("/update-single-home/:id", auth, Update_Single_Home);
 // @route       POST /home/delete-single-home/:id
 router.post("/delete-single-home/:id", auth, Delete_Single_Home);
 
-// // swagger schema get single homes
-// /**
-//  * @swagger
-//  * components:
-//  *  schemas:
-//  *    search-home:
-//  *      type: object
-//  *      required:
-//  *          - keyword
-//  *      properties:
-//  *          keyword:
-//  *              type: string
-//  *      example:
-//  *             keyword: registered home name
-//  */
-
-// /**
-//  * @swagger
-//  * /home/search-home:
-//  *   get:
-//  *    summary: Search home by home name
-//  *    tags: [Homes]
-//  *    security:
-//  *       - bearerAuth: []
-//  *    parameters:
-//  *      - in: query
-//  *        name: keyword
-//  *        schema:
-//  *          type: string
-//  *        required: true
-//  *        description: The search keyword home name
-//  *    responses:
-//  *       200:
-//  *        description: the list of homes
-//  *        content:
-//  *             application/json:
-//  *                schema:
-//  *                   $ref: '#/components/schemas/search-home'
-//  *       404:
-//  *          description: Data not found
-//  */
-
-
 /**
  * @swagger
  * /home/add-to-favourite/{id}:
@@ -471,6 +430,6 @@ router.post("/delete-single-home/:id", auth, Delete_Single_Home);
 
 // @desc        Add home to Favourites
 // @route       POST /home/add-to-favourite/:id
-router.post("/add-to-favourite/:id", auth, Add_to_Favourite);
+router.post("/add-to-favourite/:id", auth, verifyRole(Role.Admin), Add_to_Favourite);
 
 export default router;
