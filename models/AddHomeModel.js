@@ -13,7 +13,6 @@ const AddHomeSchema = mongoose.Schema({
   owner_email: {
     type: String,
     required: true,
-    unique: true,
     match:
       /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/,
   },

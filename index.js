@@ -1,13 +1,13 @@
 import express from "express";
-import userRouter from "./routes/user.js";
-import homesRouter from "./routes/homes.js";
-import connectDB from "./config/db.js";
 import morgan from "morgan";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
 import fs from "fs";
 import fileUpload from "express-fileupload";
 import bodyParser from "body-parser";
+import userRouter from "./routes/user.js";
+import homesRouter from "./routes/homes.js";
+import connectDB from "./config/db.js";
 
 const app = express();
 
@@ -47,7 +47,7 @@ const options = {
       contact: {
         name: "Vikram Rambhad",
         email: "vikramrambhad25@gmail.com",
-        url: "https://aboutvikram.vercel.app/"
+        url: "https://aboutvikram.vercel.app/",
       },
       // license: {
       //   name: "Apache 2.0",
@@ -67,8 +67,8 @@ const options = {
     },
     servers: [
       {
-        // url: "http://localhost:3000",
-        url: 'https://backend-airbnb-clone.vercel.app',
+        url: "http://localhost:3000",
+        // url: 'https://backend-airbnb-clone.vercel.app',
         description: "My API documentation."
       },
     ],
@@ -80,14 +80,17 @@ const specs = swaggerJSDoc(options);
 
 // Prevent API from CORS errors
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*'),
-  res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept, Authorization')
-  if(req.method === 'OPTIONS'){
-      res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-      return res.status(200).json({})
+  res.header("Access-Control-Allow-Origin", "*"),
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+    return res.status(200).json({});
   }
   next();
-})
+});
 
 // Routes for API
 app.get("/", (req, res) => {
@@ -102,10 +105,21 @@ app.use("/user", userRouter);
 app.use("/home", homesRouter);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs, { customCss }));
 
-
 // Error handling for all routes
-//  
+app.use((req, res, next) => {
+  const error = new Error("Method not found");
+  error.status = 404;
+  next(error);
+});
 
+app.use((error, req, res, next) => {
+  res.status(error.status || 500);
+  res.json({
+    error: {
+      message: error.message,
+    },
+  });
+});
 
 app.listen(
   PORT,
@@ -113,3 +127,4 @@ app.listen(
     `Server is running in ${process.env.NODE_ENV} mode on port ${PORT} ✅✅✅`
   )
 );
+

@@ -56,7 +56,7 @@ export const SignIn = async (req, res) => {
         status: "Invalid password",
       });
     }
-    const token = jwt.sign({ email: OldUser.email, id: OldUser._id }, secret);
+    const token = jwt.sign({ email: OldUser.email, id: OldUser._id, role: OldUser.role }, secret);
     res.status(200).json({
       token,
       status: "success",

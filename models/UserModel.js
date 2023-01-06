@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {Role} from "../_helpers/role.js"
 
 const UserSchema = mongoose.Schema({
     name: {
@@ -17,6 +18,11 @@ const UserSchema = mongoose.Schema({
     },
     id: {
         type: String
+    },
+    role: {
+        type: [String],
+        enum: Object.keys(Role),
+        default:Role.User
     }
 },{timestamps: true})
 

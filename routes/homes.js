@@ -10,6 +10,8 @@ import {
   Update_Single_Home,
 } from "../controller/homes.js";
 import auth from "../middleware/auth.js";
+import verifyRole from "../middleware/verifyRole.js";
+import { Role } from "../_helpers/role.js";
 
 const router = express.Router();
 
@@ -144,7 +146,7 @@ const router = express.Router();
 
 // @desc        Create new home
 // @route       POST /home/create-home
-router.post("/create-home", Create_Home);
+router.post("/create-home", auth, Create_Home);
 
 // swagger schema get all homes
 /**
@@ -428,6 +430,6 @@ router.post("/delete-single-home/:id", auth, Delete_Single_Home);
 
 // @desc        Add home to Favourites
 // @route       POST /home/add-to-favourite/:id
-router.post("/add-to-favourite/:id", auth, Add_to_Favourite);
+router.post("/add-to-favourite/:id", auth, verifyRole(Role.Admin), Add_to_Favourite);
 
 export default router;

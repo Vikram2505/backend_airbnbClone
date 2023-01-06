@@ -4,17 +4,17 @@ import jwt from "jsonwebtoken";
 const secret = "test";
 
 const auth = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token || token === undefined) {
-      return res.status(401).json({
-        timestramp: new Date(),
-        status: 401,
-        error: "Unauthorized access",
-        message: "Full authentication is required to access this resource",
-      });
-    }
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token || token === undefined) {
+    return res.status(401).json({
+      timestramp: new Date(),
+      status: 401,
+      error: "Unauthorized access",
+      message: "Full authentication is required to access this resource",
+    });
+  }
 
+  try {
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
         res.status(401).json({
@@ -27,11 +27,12 @@ const auth = async (req, res, next) => {
     if (token && isCustomAuth) {
       decodedData = jwt.verify(token, secret);
       req.userId = decodedData?.id;
+      req.role = decodedData?.role;
     } else {
-    //   decodedData = jwt.decode(token, secret);
-    //   const googleId = decodedData?.sub.toString();
-    //   const user = await UserModal.findOne({ googleId });
-    //   req.userId = user?._id;
+      // decodedData = jwt.decode(token, secret);
+      // const googleId = decodedData?.sub.toString();
+      // const user = await UserModal.findOne({ googleId });
+      // req.userId = user?._id;
     }
     next();
   } catch (err) {
