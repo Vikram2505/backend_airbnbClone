@@ -1,8 +1,29 @@
-import express from 'express';
-import { SignUp, SignIn, GoogleSignIn } from '../controller/user.js';
-import auth from '../middleware/auth.js';
-import { Role } from '../_helpers/role.js';
+import express from "express";
+import { SignUp, SignIn, GoogleSignIn, BlockUser } from "../controller/user.js";
+import verifyRole from "../middleware/verifyRole.js";
+import { Role } from "../_helpers/role.js";
+import auth from "../middleware/auth.js";
+
+
 const router = express.Router();
+
+// @desc        Create user
+// @route       /user/signup
+router.post("/signup", SignUp);
+
+// @desc        login user
+// @route       /user/signin
+router.post("/signin", SignIn);
+
+// @desc        google signin user
+// @route       /user/google-sign-in
+router.post("/google-sign-in", GoogleSignIn);
+
+// @desc        block user
+// @route       /user/block-user/:id
+router.post("/block-user/:id", auth, verifyRole(Role.Admin), BlockUser);
+
+export default router;
 
 /**
  * @swagger
@@ -15,7 +36,7 @@ const router = express.Router();
 /**
  * @swagger
  * components:
- *  schemas:    
+ *  schemas:
  *    Sign_in:
  *      type: object
  *      required:
@@ -35,7 +56,7 @@ const router = express.Router();
 /**
  * @swagger
  * components:
- *  schemas:    
+ *  schemas:
  *    Sign_up:
  *      type: object
  *      required:
@@ -70,7 +91,7 @@ const router = express.Router();
  *         responses:
  *              201:
  *                 description: the list of homes
- *                 content: 
+ *                 content:
  *                      application/json:
  *                          schema:
  *                            type: array
@@ -80,12 +101,8 @@ const router = express.Router();
  *                 description: Unauthorized access
  *              404:
  *                 description: Data not found
- *  
+ *
  */
-
-// @desc        Create user
-// @route       /user/signup
-router.post("/signup", SignUp);
 
 /**
  * @swagger
@@ -102,7 +119,7 @@ router.post("/signup", SignUp);
  *         responses:
  *              200:
  *                 description: the list of homes
- *                 content: 
+ *                 content:
  *                      multipart/form-data:
  *                          schema:
  *                            type: array
@@ -112,13 +129,5 @@ router.post("/signup", SignUp);
  *                 description: Unauthorized access
  *              404:
  *                 description: Data not found
- *  
+ *
  */
-
-
-// @desc        login user
-// @route       /user/signin auth([Role.Admin]),
-router.post("/signin", SignIn);
-
-router.post("/google-sign-in", GoogleSignIn)
-export default router;

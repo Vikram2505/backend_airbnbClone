@@ -6,6 +6,7 @@ import {
   Create_Home,
   Delete_Single_Home,
   Get_All_Homes,
+  Get_Each_User_Homes,
   Get_Single_Home,
   Update_Single_Home,
 } from "../controller/homes.js";
@@ -14,6 +15,38 @@ import verifyRole from "../middleware/verifyRole.js";
 import { Role } from "../_helpers/role.js";
 
 const router = express.Router();
+
+// @desc        Create new home
+// @route       POST /home/create-home
+router.post("/create-home", auth, verifyRole(Role.User, Role.Admin), Create_Home);
+
+// @desc        Get all home
+// @route       POST /home/get-all-homes
+router.post("/get-all-homes", Get_All_Homes);
+
+// @desc        Get all home registered by user
+// @route       POST /home/get-user-registered-homes
+router.post("/get-user-registered-homes", auth, verifyRole(Role.User), Get_Each_User_Homes);
+
+// @desc        Get single home by params ID
+// @route       POST /home/get-single-home
+router.post("/get-single-home/:id", Get_Single_Home);
+
+// @desc        update single home by ID
+// @route       POST /home/update-single-home/:id
+router.post("/update-single-home/:id", auth, verifyRole(Role.User, Role.Admin), Update_Single_Home);
+
+// @desc        Delete single home by ID
+// @route       POST /home/delete-single-home/:id
+router.post("/delete-single-home/:id", auth, verifyRole(Role.User, Role.Admin), Delete_Single_Home);
+
+// @desc        Add home to Favourites
+// @route       POST /home/add-to-favourite/:id
+router.post("/add-to-favourite/:id", auth, verifyRole(Role.User, Role.Admin), Add_to_Favourite);
+
+export default router;
+
+
 
 // Swagger group name
 /**
@@ -144,10 +177,6 @@ const router = express.Router();
  *
  */
 
-// @desc        Create new home
-// @route       POST /home/create-home
-router.post("/create-home", auth, Create_Home);
-
 // swagger schema get all homes
 /**
  * @swagger
@@ -223,9 +252,58 @@ router.post("/create-home", auth, Create_Home);
  *
  */
 
-// @desc        Get all home
-// @route       POST /home/get-all-homes
-router.post("/get-all-homes", Get_All_Homes);
+
+// swagger schema get indivisual user registered homes
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    Get_User_Registered_homes:
+ *      example:
+ *             dataLimit: 10
+ *             pageNo: 1
+ *             keyword: ""
+ */
+
+/**
+ * @swagger
+ * /home/get-user-registered-homes:
+ *      post:
+ *         summary: Show homes created by each user
+ *         tags: [Homes]
+ *         security:
+ *            - bearerAuth: []
+ *         requestBody:
+ *             required: true
+ *             content:
+ *                multipart/form-data: 
+ *                      schema:
+ *                         type: object
+ *                         required:
+ *                              - dataLimit
+ *                              - pageNo
+ *                         properties:
+ *                              dataLimit:
+ *                                 type: integer
+ *                              pageNo:
+ *                                 type: integer
+ *                              keyword:
+ *                                 type: string
+ *                        
+ *         responses:
+ *              200:
+ *                 description: the list of homes
+ *                 content:
+ *                      application/json:
+ *                          schema:
+ *                            type: array
+ *                            items:
+ *                              $ref: '#/components/schemas/Get_all_homes'
+ *              404:
+ *                 description: Data not found
+ *
+ */
+
 
 // swagger schema get single homes
 /**
@@ -270,10 +348,7 @@ router.post("/get-all-homes", Get_All_Homes);
  *
  */
 
-// @desc        Get single home by params ID
-// @route       POST /home/get-single-home
-router.post("/get-single-home/:id", Get_Single_Home);
-
+// swagger schema for update single homes
 /**
  * @swagger
  * /home/update-single-home/{id}:
@@ -366,10 +441,7 @@ router.post("/get-single-home/:id", Get_Single_Home);
  *          description: Data not found
  */
 
-// @desc        update single home by ID
-// @route       POST /home/update-single-home/:id
-router.post("/update-single-home/:id", auth, Update_Single_Home);
-
+// swagger schema for delete single homes
 /**
  * @swagger
  * /home/delete-single-home/{id}:
@@ -397,10 +469,7 @@ router.post("/update-single-home/:id", auth, Update_Single_Home);
  *
  */
 
-// @desc        Delete single home by ID
-// @route       POST /home/delete-single-home/:id
-router.post("/delete-single-home/:id", auth, Delete_Single_Home);
-
+// swagger schema favourite homes
 /**
  * @swagger
  * /home/add-to-favourite/{id}:
@@ -428,8 +497,6 @@ router.post("/delete-single-home/:id", auth, Delete_Single_Home);
  *
  */
 
-// @desc        Add home to Favourites
-// @route       POST /home/add-to-favourite/:id
-router.post("/add-to-favourite/:id", auth, verifyRole(Role.Admin), Add_to_Favourite);
 
-export default router;
+
+

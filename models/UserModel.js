@@ -23,6 +23,10 @@ const UserSchema = mongoose.Schema({
         type: [String],
         enum: Object.keys(Role),
         default:Role.User
+    },
+    userBlocked: {
+        type: Boolean,
+        default: false
     }
 },{timestamps: true})
 

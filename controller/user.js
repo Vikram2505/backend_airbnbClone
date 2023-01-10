@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 import UserModel from "../models/UserModel.js";
 
 const secret = "test";
@@ -56,14 +57,51 @@ export const SignIn = async (req, res) => {
         status: "Invalid password",
       });
     }
-    const token = jwt.sign({ email: OldUser.email, id: OldUser._id, role: OldUser.role }, secret);
+    const token = jwt.sign(
+      { email: OldUser.email, id: OldUser._id, role: OldUser.role },
+      secret
+    );
     res.status(200).json({
       token,
+      userName: OldUser?.name,
+      userId: OldUser._id,
+      email: OldUser.email,
       status: "success",
     });
   } catch (err) {
     res.status(500).json({
       status: "failed",
+      message: err.message,
+    });
+  }
+};
+
+// @desc        block user
+// @route       /user/block-user
+export const BlockUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({
+        status: "failed",
+        message: `User not exists with id: ${id}`,
+      });
+    }
+    await UserModel.findByIdAndUpdate(
+      id,
+      { userBlocked: true },
+      {
+        new: true,
+      }
+    );
+
+    res.status(201).json({
+      status: "success",
+      message: "User blocked Successfully",
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "error",
       message: err.message,
     });
   }
@@ -80,7 +118,7 @@ export const GoogleSignIn = async (req, res) => {
     const result = await UserModel.create({
       email,
       name,
-     id: googleId,
+      id: googleId,
     });
     res.status(201).json({
       status: "success",
