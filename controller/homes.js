@@ -485,8 +485,8 @@ export const Add_to_Favourite = async (req, res) => {
     const FavouriteHome = await HomeSchema.findById(id);
     const index = FavouriteHome.favourite.findIndex(
       (id) => id === String(req.userId)
-    );
-    if (index === -1) {
+      );
+      if (index === -1) {
       FavouriteHome.favourite.push(req.userId);
     } else {
       FavouriteHome.favourite = FavouriteHome.favourite.filter(

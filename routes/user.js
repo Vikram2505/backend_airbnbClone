@@ -1,5 +1,5 @@
 import express from "express";
-import { SignUp, SignIn, GoogleSignIn, BlockUser } from "../controller/user.js";
+import { SignUp, SignIn, GoogleSignIn, BlockUser, AllUsers } from "../controller/user.js";
 import verifyRole from "../middleware/verifyRole.js";
 import { Role } from "../_helpers/role.js";
 import auth from "../middleware/auth.js";
@@ -22,6 +22,10 @@ router.post("/google-sign-in", GoogleSignIn);
 // @desc        block user
 // @route       /user/block-user/:id
 router.post("/block-user/:id", auth, verifyRole(Role.Admin), BlockUser);
+
+// @desc        Get all user
+// @route       /user/all-user
+router.get("/all-user", auth, verifyRole(Role.Admin), AllUsers);
 
 export default router;
 
@@ -129,5 +133,63 @@ export default router;
  *                 description: Unauthorized access
  *              404:
  *                 description: Data not found
+ *
+ */
+
+// Swagger schema for Get all users
+/**
+ * @swagger
+ * /user/all-user:
+ *      get:
+ *         summary: Get all users data
+ *         tags: [User]
+ *         security:
+ *             - bearerAuth: []
+ *         responses:
+ *              200:
+ *                 description: the list of homes
+ *                 content:
+ *                      application/json:
+ *                          schema:
+ *                            type: array
+ *                            
+ *              401:
+ *                 description: Unauthorized access
+ *              404:
+ *                 description: Data not found
+ *              500:
+ *                 description: Internal server error
+ *
+ */
+
+// Swagger schema for block user users
+/**
+ * @swagger
+ * /user/block-user/{id}:
+ *      post:
+ *         summary: Block users ADMIN only
+ *         tags: [User]
+ *         security:
+ *             - bearerAuth: []
+ *         parameters:
+ *              - in: path
+ *                name: id
+ *                schema:
+ *                  type: string
+ *                required: true
+ *                description: User ID
+ *         responses:
+ *              200:
+ *                 description: the list of homes
+ *                 content:
+ *                      application/json:
+ *                          schema:
+ *                            type: array
+ *                            
+ *              401:
+ *                 description: Unauthorized access
+ *              404:
+ *                 description: Data not found
+ *              
  *
  */

@@ -26,8 +26,15 @@ const auth = async (req, res, next) => {
     let decodedData;
     if (token && isCustomAuth) {
       decodedData = jwt.verify(token, secret);
+      console.log(decodedData);
       req.userId = decodedData?.id;
       req.role = decodedData?.role;
+      
+      if (decodedData.userBlocked) {
+        return res
+          .status(404)
+          .json({ error: "Failed", message: "user blocked" });
+      }
     } else {
       // decodedData = jwt.decode(token, secret);
       // const googleId = decodedData?.sub.toString();

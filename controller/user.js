@@ -5,8 +5,6 @@ import UserModel from "../models/UserModel.js";
 
 const secret = "test";
 
-// client ID:- 743903588326-b1jknh0c9mkjptiuakhss1rilusbvqua.apps.googleusercontent.com
-// client secret: - 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
 // @desc        create user
 // @route       /user/signup
 export const SignUp = async (req, res) => {
@@ -58,14 +56,26 @@ export const SignIn = async (req, res) => {
       });
     }
     const token = jwt.sign(
-      { email: OldUser.email, id: OldUser._id, role: OldUser.role },
+      {
+        email: OldUser.email,
+        id: OldUser._id,
+        role: OldUser.role,
+        userBlocked: OldUser.userBlocked,
+      },
       secret
     );
+    if (OldUser.userBlocked) {
+      return res.status(200).json({
+        token,
+        userBlocked: OldUser.userBlocked,
+      });
+    }
     res.status(200).json({
       token,
       userName: OldUser?.name,
       userId: OldUser._id,
       email: OldUser.email,
+      userBlocked: OldUser.userBlocked,
       status: "success",
     });
   } catch (err) {
@@ -76,8 +86,20 @@ export const SignIn = async (req, res) => {
   }
 };
 
+export const AllUsers = async (req, res) => {
+  const users = await UserModel.find()
+    .select("_id name userBlocked email createdAt role")
+    .exec();
+  res.status(200).json({
+    count: users.length,
+    users,
+    status: "success",
+    message: "All users",
+  });
+};
+
 // @desc        block user
-// @route       /user/block-user
+// @route       /user/block-user/:id
 export const BlockUser = async (req, res) => {
   const { id } = req.params;
   try {
@@ -87,9 +109,16 @@ export const BlockUser = async (req, res) => {
         message: `User not exists with id: ${id}`,
       });
     }
+    const user = await UserModel.findById(id);
+    let block;
+    if (user.userBlocked) {
+      block = false;
+    } else {
+      block = true;
+    }
     await UserModel.findByIdAndUpdate(
       id,
-      { userBlocked: true },
+      { userBlocked: block },
       {
         new: true,
       }
@@ -97,7 +126,10 @@ export const BlockUser = async (req, res) => {
 
     res.status(201).json({
       status: "success",
-      message: "User blocked Successfully",
+      blockStatus: block,
+      message: block
+        ? "User blocked Successfully"
+        : "User Un-blocked Successfully",
     });
   } catch (err) {
     res.status(404).json({
