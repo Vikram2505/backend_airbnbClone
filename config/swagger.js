@@ -30,8 +30,8 @@ const options = {
       },
       servers: [
         {
-          // url: "http://localhost:3000",
-          url: 'https://backend-airbnb-clone.vercel.app',
+          url: "http://localhost:3000",
+          // url: 'https://backend-airbnb-clone.vercel.app',
           description: "My API documentation."
         },
       ],
