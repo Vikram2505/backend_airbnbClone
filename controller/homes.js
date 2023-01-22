@@ -134,8 +134,8 @@ export const Get_All_Homes = async (req, res) => {
           "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
         )
         .exec();
-      console.log(result);
-      total = await HomeSchema.find({
+      // console.log(result);
+      total += await HomeSchema.find({
         deleted: false,
         // location: title,
         price: { $gt: minPrice, $lt: maxPrice },
@@ -148,152 +148,152 @@ export const Get_All_Homes = async (req, res) => {
       });
     }
 
-    // if (keyword !== "") {
-    //   const title = new RegExp(keyword, "i");
-    //   let result = await HomeSchema.find({
-    //     deleted: false,
-    //     location: title,
-    //   })
-    //     .limit(limit)
-    //     .skip(startIndex)
-    //     .select(
-    //       "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
-    //     )
-    //     .exec();
-    //   total += await HomeSchema.find({ deleted: false, location: title })
-    //     .count()
-    //     .exec();
-    //   result.map((item) => {
-    //     AllHomes.push(item);
-    //   });
-    // }
+    if (keyword !== "") {
+      const title = new RegExp(keyword, "i");
+      let result = await HomeSchema.find({
+        deleted: false,
+        location: title,
+      })
+        .limit(limit)
+        .skip(startIndex)
+        .select(
+          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+        )
+        .exec();
+      total += await HomeSchema.find({ deleted: false, location: title })
+        .count()
+        .exec();
+      result.map((item) => {
+        AllHomes.push(item);
+      });
+    }
 
-    // if (bedrooms !== "") {
-    //   let result = await HomeSchema.find({
-    //     deleted: false,
-    //     total_bedroom: bedrooms,
-    //   })
-    //     .limit(limit)
-    //     .skip(startIndex)
-    //     .select(
-    //       "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
-    //     )
-    //     .exec();
-    //   total = await HomeSchema.find({ deleted: false, total_bedroom: bedrooms })
-    //     .count()
-    //     .exec();
-    //   result.map((item) => {
-    //     AllHomes.push(item);
-    //   });
-    // }
+    if (bedrooms !== "") {
+      let result = await HomeSchema.find({
+        deleted: false,
+        total_bedroom: bedrooms,
+      })
+        .limit(limit)
+        .skip(startIndex)
+        .select(
+          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+        )
+        .exec();
+      total += await HomeSchema.find({ deleted: false, total_bedroom: bedrooms })
+        .count()
+        .exec();
+      result.map((item) => {
+        AllHomes.push(item);
+      });
+    }
 
-    // if (bathroom !== "") {
-    //   let result = await HomeSchema.find({
-    //     deleted: false,
-    //     total_bathroom: bathroom,
-    //   })
-    //     .limit(limit)
-    //     .skip(startIndex)
-    //     .select(
-    //       "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
-    //     )
-    //     .exec();
-    //   total = await HomeSchema.find({
-    //     deleted: false,
-    //     total_bathroom: bathroom,
-    //   })
-    //     .count()
-    //     .exec();
-    //   result.map((item) => {
-    //     AllHomes.push(item);
-    //   });
-    // }
+    if (bathroom !== "") {
+      let result = await HomeSchema.find({
+        deleted: false,
+        total_bathroom: bathroom,
+      })
+        .limit(limit)
+        .skip(startIndex)
+        .select(
+          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+        )
+        .exec();
+      total += await HomeSchema.find({
+        deleted: false,
+        total_bathroom: bathroom,
+      })
+        .count()
+        .exec();
+      result.map((item) => {
+        AllHomes.push(item);
+      });
+    }
 
-    // if (beds !== "") {
-    //   let result = await HomeSchema.find({
-    //     deleted: false,
-    //     total_beds: beds,
-    //   })
-    //     .limit(limit)
-    //     .skip(startIndex)
-    //     .select(
-    //       "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
-    //     )
-    //     .exec();
-    //   total = await HomeSchema.find({ deleted: false, total_beds: beds })
-    //     .count()
-    //     .exec();
-    //   result.map((item) => {
-    //     AllHomes.push(item);
-    //   });
-    // }
+    if (beds !== "") {
+      let result = await HomeSchema.find({
+        deleted: false,
+        total_beds: beds,
+      })
+        .limit(limit)
+        .skip(startIndex)
+        .select(
+          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+        )
+        .exec();
+      total += await HomeSchema.find({ deleted: false, total_beds: beds })
+        .count()
+        .exec();
+      result.map((item) => {
+        AllHomes.push(item);
+      });
+    }
 
-    // if (typeOfPlace !== "") {
-    //   let result = await HomeSchema.find({
-    //     deleted: false,
-    //     type_of_place: { $in: typeOfPlace },
-    //   })
-    //     .limit(limit)
-    //     .skip(startIndex)
-    //     .select(
-    //       "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
-    //     )
-    //     .exec();
-    //   total = await HomeSchema.find({
-    //     deleted: false,
-    //     type_of_place: { $in: typeOfPlace },
-    //   })
-    //     .count()
-    //     .exec();
-    //   result.map((item) => {
-    //     AllHomes.push(item);
-    //   });
-    // }
+    if (typeOfPlace !== "") {
+      let result = await HomeSchema.find({
+        deleted: false,
+        type_of_place: { $in: typeOfPlace },
+      })
+        .limit(limit)
+        .skip(startIndex)
+        .select(
+          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+        )
+        .exec();
+      total += await HomeSchema.find({
+        deleted: false,
+        type_of_place: { $in: typeOfPlace },
+      })
+        .count()
+        .exec();
+      result.map((item) => {
+        AllHomes.push(item);
+      });
+    }
 
-    // if (propertyType !== "") {
-    //   let result = await HomeSchema.find({
-    //     deleted: false,
-    //     property_type: { $in: propertyType },
-    //   })
-    //     .limit(limit)
-    //     .skip(startIndex)
-    //     .select(
-    //       "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
-    //     )
-    //     .exec();
-    //   total = await HomeSchema.find({
-    //     deleted: false,
-    //     property_type: { $in: propertyType },
-    //   })
-    //     .count()
-    //     .exec();
-    //   result.map((item) => {
-    //     AllHomes.push(item);
-    //   });
-    // }
+    if (propertyType !== "") {
+      let result = await HomeSchema.find({
+        deleted: false,
+        property_type: { $in: propertyType },
+      })
+        .limit(limit)
+        .skip(startIndex)
+        .select(
+          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+        )
+        .exec();
+      total += await HomeSchema.find({
+        deleted: false,
+        property_type: { $in: propertyType },
+      })
+        .count()
+        .exec();
+      result.map((item) => {
+        AllHomes.push(item);
+      });
+    }
 
-    // if (amenities !== "") {
-    //   let result = await HomeSchema.find({
-    //     deleted: false,
-    //     this_place_offers: { $in: amenities },
-    //   })
-    //     .limit(limit)
-    //     .skip(startIndex)
-    //     .select(
-    //       "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
-    //     )
-    //     .exec();
-    //   total = await HomeSchema.find({
-    //     deleted: false,
-    //     this_place_offers: { $in: amenities },
-    //   })
-    //     .count()
-    //     .exec();
+    if (amenities !== "") {
+      let result = await HomeSchema.find({
+        deleted: false,
+        this_place_offers: { $in: amenities },
+      })
+        .limit(limit)
+        .skip(startIndex)
+        .select(
+          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+        )
+        .exec();
+      total += await HomeSchema.find({
+        deleted: false,
+        this_place_offers: { $in: amenities },
+      })
+        .count()
+        .exec();
 
-    //   result.map((item) => {
-    //     AllHomes.push(item);
-    //   });
-    // }
+      result.map((item) => {
+        AllHomes.push(item);
+      });
+    }
 
     if (
       bedrooms === "" &&
