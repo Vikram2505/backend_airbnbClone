@@ -9,6 +9,7 @@ import userRouter from "./routes/user.js";
 import homesRouter from "./routes/homes.js";
 import connectDB from "./config/db.js";
 import options from "./config/swagger.js";
+import cors from "cors";
 
 const app = express();
 
@@ -28,10 +29,15 @@ app.use(
   })
 );
 
+// var corsOptions = {
+//   origin: "http://localhost:3001",
+//   credentials: true,
+// };
+
 // Body parser to receive user data
 app.use(morgan("dev")); //to show api hit url in node console
 app.use(express.static("uploads"));
-
+// app.use(cors(corsOptions));
 app.use(express.json({ limit: "30mb", extended: true })); //to show/receive req body in console
 
 // Connect database function
@@ -87,4 +93,3 @@ app.listen(
     `Server is running in ${process.env.NODE_ENV} mode on port ${PORT} ✅✅✅`
   )
 );
-
