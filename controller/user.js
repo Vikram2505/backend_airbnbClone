@@ -77,7 +77,7 @@ export const SignIn = async (req, res) => {
 };
 
 // @desc        block user
-// @route       /user/block-user
+// @route       /user/block-user/:id
 export const BlockUser = async (req, res) => {
   const { id } = req.params;
   try {
@@ -87,14 +87,27 @@ export const BlockUser = async (req, res) => {
         message: `User not exists with id: ${id}`,
       });
     }
-    await UserModel.findByIdAndUpdate(
-      id,
-      { userBlocked: true },
-      {
-        new: true,
-      }
-    );
+    let result = "false";
+    // let data = await UserModel.find({ _id: id })
+    //   .select("id name email role userBlocked")
+    //   .exec();
+    // console.log(data);
+    if (result === "false") {
+      result = "true";
+      console.log(result,'if');
 
+    } else if(result === "true") {
+      result = "false";
+      console.log(result,'else');
+    }
+
+    // await UserModel.findByIdAndUpdate(
+    //   id,
+    //   { userBlocked: result },
+    //   {
+    //     new: true,
+    //   }
+    // );
     res.status(201).json({
       status: "success",
       message: "User blocked Successfully",
