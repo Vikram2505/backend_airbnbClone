@@ -5,6 +5,7 @@ import {
   Add_to_Favourite,
   Create_Home,
   Delete_Single_Home,
+  Get_All_Favourited_Homes,
   Get_All_Homes,
   Get_Each_User_Homes,
   Get_Single_Home,
@@ -43,6 +44,10 @@ router.post("/delete-single-home/:id", auth, verifyRole(Role.User, Role.Admin), 
 // @desc        Add home to Favourites
 // @route       POST /home/add-to-favourite/:id
 router.post("/add-to-favourite/:id", auth, verifyRole(Role.User, Role.Admin), Add_to_Favourite);
+
+// @desc        Get each user Favourited homes
+// @route       POST /home/favourite-homes/:id
+router.post("/favourite-homes/:id", auth, verifyRole(Role.User), Get_All_Favourited_Homes);
 
 export default router;
 
@@ -497,6 +502,47 @@ export default router;
  *
  */
 
+// swagger schema show all favourite homes
+/**
+ * @swagger
+ * /home/favourite-homes/{id}:
+ *   post:
+ *    summary: Get all favourite home set through user by id
+ *    tags: [Homes]
+ *    security:
+ *          - bearerAuth: []
+ *    requestBody:
+ *             required: true
+ *             content:
+ *                multipart/form-data: 
+ *                      schema:
+ *                         type: object
+ *                         required:
+ *                              - dataLimit
+ *                              - pageNo
+ *                         properties:
+ *                              dataLimit:
+ *                                 type: integer
+ *                              pageNo:
+ *                                 type: integer
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: The home id
+ *    responses:
+ *       200:
+ *        description: the list of homes
+ *        content:
+ *             application/json:
+ *                schema:
+ *                   $ref: '#/components/schemas/Get_single_homes'
+ *       404:
+ *          description: Data not found
+ *
+ */
 
 
 

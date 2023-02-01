@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index",
-    "dev": "cross-env NODE_ENV=development nodemon index",
-    "hello": "node function"
+    "dev": "cross-env NODE_ENV=development nodemon index"
   },
   "keywords": [],
   "author": "",
