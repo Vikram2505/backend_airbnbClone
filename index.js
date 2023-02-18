@@ -9,7 +9,6 @@ import userRouter from "./routes/user.js";
 import homesRouter from "./routes/homes.js";
 import connectDB from "./config/db.js";
 import options from "./config/swagger.js";
-import cors from "cors";
 
 const app = express();
 
@@ -17,8 +16,9 @@ const app = express();
 const PORT = 3000;
 
 // body parser is use to get form value
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.json());
 
 const customCss = fs.readFileSync(process.cwd() + "/swagger.css", "utf8");
 

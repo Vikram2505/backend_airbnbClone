@@ -1,6 +1,6 @@
 import express from "express";
+import upload from "../config/multer.js";
 
-// import upload from "../config/multer.js";
 import {
   Add_to_Favourite,
   Create_Home,
@@ -9,6 +9,7 @@ import {
   Get_Each_User_Homes,
   Get_Single_Home,
   Update_Single_Home,
+  UploadImage,
 } from "../controller/homes.js";
 import auth from "../middleware/auth.js";
 import verifyRole from "../middleware/verifyRole.js";
@@ -43,6 +44,10 @@ router.post("/delete-single-home/:id", auth, verifyRole(Role.User, Role.Admin), 
 // @desc        Add home to Favourites
 // @route       POST /home/add-to-favourite/:id
 router.post("/add-to-favourite/:id", auth, verifyRole(Role.User, Role.Admin), Add_to_Favourite);
+
+// @desc        Upload image to cloudinary
+// @route       POST /home/upload-image
+router.post('/upload-image', upload.single('home_image') , UploadImage)
 
 export default router;
 

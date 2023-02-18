@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import UserModel from "../models/UserModel.js";
+import { ErrorHandler } from "../_helpers/errorHandler.js";
 
 const secret = "test";
 
@@ -40,20 +41,22 @@ export const SignUp = async (req, res) => {
 
 // @desc        login user
 // @route       /user/signin
-export const SignIn = async (req, res) => {
+export const SignIn = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const OldUser = await UserModel.findOne({ email });
     if (!OldUser) {
-      return res.status(404).json({
-        status: "User dosen't exists",
-      });
+      throw new ErrorHandler(404, "User dosen't exists");
+      // return res.status(404).json({
+      //   status: "User dosen't exists",
+      // });
     }
     const isCorrectPassword = await bcrypt.compare(password, OldUser.password);
     if (!isCorrectPassword) {
-      return res.status(404).json({
-        status: "Invalid password",
-      });
+      throw new ErrorHandler(404, "Invalid password");
+      // return res.status(404).json({
+      //   status: "Invalid password",
+      // });
     }
     const token = jwt.sign(
       {
@@ -79,23 +82,30 @@ export const SignIn = async (req, res) => {
       status: "success",
     });
   } catch (err) {
-    res.status(500).json({
-      status: "failed",
-      message: err.message,
-    });
+    next(new ErrorHandler(err.statusCode || 500, err.message));
+    // res.status(500).json({
+    //   status: "failed",
+    //   message: err.message,
+    // });
   }
 };
 
 export const AllUsers = async (req, res) => {
-  const users = await UserModel.find()
-    .select("_id name userBlocked email createdAt role")
-    .exec();
-  res.status(200).json({
-    count: users.length,
-    users,
-    status: "success",
-    message: "All users",
-  });
+  try {
+    const users = await UserModel.find()
+      .select("_id name userBlocked email createdAt role")
+      .exec();
+    res.status(200).json({
+      count: users.length,
+      users,
+      status: "success",
+      message: "All users",
+    });
+  } catch (err) {
+    // new ErrorHandler(500, err.message, "failed");
+    next(new ErrorHandler(err.statusCode || 500, err.message));
+
+  }
 };
 
 // @desc        block user

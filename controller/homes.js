@@ -3,8 +3,11 @@ import HomeSchema from "../models/AddHomeModel.js";
 import renameKeys from "../_helpers/renameKeys.js";
 // import uploads from "../config/cloudinary.js"
 import fs from "fs";
+
 // define require
 import { createRequire } from "module";
+import { ErrorHandler } from "../_helpers/errorHandler.js";
+import uploadToCloudinary from "../config/cloudinaryConfig.js";
 const require = createRequire(import.meta.url);
 
 const cloudinary = require("cloudinary").v2;
@@ -23,51 +26,51 @@ export const Create_Home = async (req, res) => {
   let homeImage = [];
   try {
     //receive uploaded home images
-    const homeImages = req?.files;
-    const ownerImage = req?.files?.owner_image;
-    if (homeImages === null) {
-      throw new Error("Please upload image");
-    }
+    // const homeImages = req?.files;
+    // const ownerImage = req?.files?.owner_image;
+    // if (homeImages === null) {
+    //   throw new Error("Please upload image");
+    // }
 
-    const renamedObj = renameKeys(homeImages, { "home_image[]": "home_image" });
-    const newHomeData = renameKeys(req.body, {
-      "this_place_offers[]": "this_place_offers",
-    });
+    // const renamedObj = renameKeys(homeImages, { "home_image[]": "home_image" });
+    // const newHomeData = renameKeys(req.body, {
+    //   "this_place_offers[]": "this_place_offers",
+    // });
 
-    if (renamedObj?.size > 1000000 || ownerImage?.size > 1000000) {
-      throw new Error("Image size must less than 1Mb");
-    }
+    // if (renamedObj?.size > 1000000 || ownerImage?.size > 1000000) {
+    //   throw new Error("Image size must less than 1Mb");
+    // }
 
     // check if image size is less than 2
-    if (
-      renamedObj?.home_image.length === undefined ||
-      renamedObj?.home_image.length < 2
-    ) {
-      throw new Error("Atleast 2 images need to upload");
-    }
+    // if (
+    //   renamedObj?.home_image.length === undefined ||
+    //   renamedObj?.home_image.length < 2
+    // ) {
+    //   throw new Error("Atleast 2 images need to upload");
+    // }
 
     // multiple homes image upload
-    let multipleHomeImages = await renamedObj.home_image.map((image) =>
-      cloudinary.uploader.upload(image.tempFilePath)
-    );
-    let imageResponses = await Promise.all(multipleHomeImages);
-    imageResponses.map((url) => {
-      homeImage.push(url.secure_url);
-    });
+    // let multipleHomeImages = await renamedObj.home_image.map((image) =>
+    //   cloudinary.uploader.upload(image.tempFilePath)
+    // );
+    // let imageResponses = await Promise.all(multipleHomeImages);
+    // imageResponses.map((url) => {
+    //   homeImage.push(url.secure_url);
+    // });
 
     // Delete temp folder created at uploading file
-    fs.rm("tmp", { recursive: true, force: true }, (err) => {
-      if (err) {
-        console.log(err, "attempt to delete temp folder");
-      }
-      console.log("tmp folder is deleted!");
-    });
+    // fs.rm("tmp", { recursive: true, force: true }, (err) => {
+    //   if (err) {
+    //     console.log(err, "attempt to delete temp folder");
+    //   }
+    //   console.log("tmp folder is deleted!");
+    // });
 
     // upload single owner image
-    let ownerImageUpload =
-      ownerImage === undefined
-        ? ""
-        : await cloudinary.uploader.upload(ownerImage.tempFilePath);
+    // let ownerImageUpload =
+    //   ownerImage === undefined
+    //     ? ""
+    //     : await cloudinary.uploader.upload(ownerImage.tempFilePath);
 
     const NewHome = new HomeSchema({
       ...newHomeData,
@@ -78,10 +81,10 @@ export const Create_Home = async (req, res) => {
       created_at: new Date().toISOString(),
     });
 
-    await NewHome.save();
+    // await NewHome.save();
     res.status(201).json({
       status: "success",
-      // NewHome,
+      NewHome,
       message: "New home is created successfully",
     });
   } catch (err) {
@@ -125,17 +128,17 @@ export const Get_All_Homes = async (req, res) => {
           price: { $gt: minPrice, $lt: maxPrice },
         },
         {
-          location: {$eq:title}
+          location: { $eq: title },
         }
       )
         .limit(limit)
         .skip(startIndex)
         .select(
-          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+          "home_name location favourite total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
         )
         .exec();
       // console.log(result);
-      total += await HomeSchema.find({
+      total = await HomeSchema.find({
         deleted: false,
         // location: title,
         price: { $gt: minPrice, $lt: maxPrice },
@@ -157,10 +160,10 @@ export const Get_All_Homes = async (req, res) => {
         .limit(limit)
         .skip(startIndex)
         .select(
-          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+          "home_name location favourite total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
         )
         .exec();
-      total += await HomeSchema.find({ deleted: false, location: title })
+      total = await HomeSchema.find({ deleted: false, location: title })
         .count()
         .exec();
       result.map((item) => {
@@ -176,10 +179,10 @@ export const Get_All_Homes = async (req, res) => {
         .limit(limit)
         .skip(startIndex)
         .select(
-          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+          "home_name location favourite total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
         )
         .exec();
-      total += await HomeSchema.find({ deleted: false, total_bedroom: bedrooms })
+      total = await HomeSchema.find({ deleted: false, total_bedroom: bedrooms })
         .count()
         .exec();
       result.map((item) => {
@@ -195,10 +198,10 @@ export const Get_All_Homes = async (req, res) => {
         .limit(limit)
         .skip(startIndex)
         .select(
-          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+          "home_name location favourite total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
         )
         .exec();
-      total += await HomeSchema.find({
+      total = await HomeSchema.find({
         deleted: false,
         total_bathroom: bathroom,
       })
@@ -217,10 +220,10 @@ export const Get_All_Homes = async (req, res) => {
         .limit(limit)
         .skip(startIndex)
         .select(
-          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+          "home_name location favourite total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
         )
         .exec();
-      total += await HomeSchema.find({ deleted: false, total_beds: beds })
+      total = await HomeSchema.find({ deleted: false, total_beds: beds })
         .count()
         .exec();
       result.map((item) => {
@@ -236,10 +239,10 @@ export const Get_All_Homes = async (req, res) => {
         .limit(limit)
         .skip(startIndex)
         .select(
-          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+          "home_name location favourite total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
         )
         .exec();
-      total += await HomeSchema.find({
+      total = await HomeSchema.find({
         deleted: false,
         type_of_place: { $in: typeOfPlace },
       })
@@ -258,10 +261,10 @@ export const Get_All_Homes = async (req, res) => {
         .limit(limit)
         .skip(startIndex)
         .select(
-          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+          "home_name location favourite total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
         )
         .exec();
-      total += await HomeSchema.find({
+      total = await HomeSchema.find({
         deleted: false,
         property_type: { $in: propertyType },
       })
@@ -280,10 +283,10 @@ export const Get_All_Homes = async (req, res) => {
         .limit(limit)
         .skip(startIndex)
         .select(
-          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+          "home_name location total_beds favourite type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
         )
         .exec();
-      total += await HomeSchema.find({
+      total = await HomeSchema.find({
         deleted: false,
         this_place_offers: { $in: amenities },
       })
@@ -313,8 +316,13 @@ export const Get_All_Homes = async (req, res) => {
         .limit(limit)
         .skip(startIndex)
         .select(
-          "home_name location total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
+          "home_name location favourite total_beds type_of_place home_city total_bedroom total_bathroom price home_image rating this_place_offers"
         )
+        .exec();
+      total = await HomeSchema.find({
+        deleted: false,
+      })
+        .count()
         .exec();
       AllHomes = result;
     }
@@ -515,3 +523,15 @@ export const Add_to_Favourite = async (req, res) => {
     });
   }
 };
+
+export const UploadImage = async (req, res, next) => {
+    try {
+      const {home_image} = req.body;
+      // if(!home_image) throw new ErrorHandler(400, 'Image is required');
+      const imageDetails = await uploadToCloudinary(home_image);
+      console.log(imageDetails,'image details')
+      res.status(200).json({message: 'Upload successfully', homeImage: imageDetails.secure_url})
+    } catch (error) {
+      
+    }
+}
