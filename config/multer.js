@@ -6,8 +6,12 @@ import multer from "multer";
 //       cb(null, file.fieldname + "_" + Date.now()+'_' + file.originalname);
 //     },
 //   });
-const storage = multer.memoryStorage();
-console.log(storage)
+const storage = multer.memoryStorage({
+      destination: ("uploads"),
+      filename: (req, file, cb) => {
+        cb(null, file.fieldname + "_" + Date.now()+'_' + file.originalname);
+      },
+    });
 // const fileFilter = (req, res, cb) => {
   //   if(file.mimetype === "image/jpeg" || file.mimetype === "image/png"){
     //       cb(null, true)
