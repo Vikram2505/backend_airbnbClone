@@ -18,32 +18,26 @@ const PORT = 3000;
 // body parser is use to get form value
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
-app.use(express.json());
 
 const customCss = fs.readFileSync(process.cwd() + "/swagger.css", "utf8");
 
 // it is used for upload file from local storage
-app.use(
-  fileUpload({
-    useTempFiles: true,
-  })
-);
-
-// var corsOptions = {
-//   origin: "http://localhost:3001",
-//   credentials: true,
-// };
+// app.use(
+//   fileUpload({
+//     useTempFiles: true,
+//   })
+// );
 
 // Body parser to receive user data
 app.use(morgan("dev")); //to show api hit url in node console
-app.use(express.static("uploads"));
-// app.use(cors(corsOptions));
+// app.use(express.static("uploads"));
 app.use(express.json({ limit: "30mb", extended: true })); //to show/receive req body in console
 
 // Connect database function
 connectDB();
 
 const specs = swaggerJSDoc(options);
+
 // Prevent API from CORS errors
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"),

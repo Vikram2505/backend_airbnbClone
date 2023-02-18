@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import HomeSchema from "../models/AddHomeModel.js";
-import renameKeys from "../_helpers/renameKeys.js";
+// import renameKeys from "../_helpers/renameKeys.js";
 // import uploads from "../config/cloudinary.js"
-import fs from "fs";
+// import fs from "fs";
 
 // define require
 import { createRequire } from "module";
@@ -22,9 +22,26 @@ cloudinary.config({
 // @desc        Create new home
 // @route       POST /home/create-home
 export const Create_Home = async (req, res) => {
-  // const HomeData = req.body;
+  const HomeData = req.body;
   let homeImage = [];
   try {
+    const { home_image, owner_image } = req.body;
+    if (home_image === "") throw new ErrorHandler(400, "Home image is required");
+    if (owner_image === "") throw new ErrorHandler(400, "Owner image is required");
+
+    if(home_image.length > 1){
+      let image = home_image.map(async (img) => {
+       let imageUrl = await uploadToCloudinary(img);
+       homeImage.push(imageUrl.secure_url)
+      })
+      await Promise.all(image)
+    }else{
+      let image = await uploadToCloudinary(home_image[0]);
+      homeImage = image.secure_url;
+    }
+
+    let ownerImage = await uploadToCloudinary(owner_image[0]);
+    
     //receive uploaded home images
     // const homeImages = req?.files;
     // const ownerImage = req?.files?.owner_image;
@@ -73,15 +90,15 @@ export const Create_Home = async (req, res) => {
     //     : await cloudinary.uploader.upload(ownerImage.tempFilePath);
 
     const NewHome = new HomeSchema({
-      ...newHomeData,
+      ...HomeData,
       creator: req.userId,
       home_image: homeImage,
-      owner_image: ownerImageUpload.secure_url,
+      owner_image: ownerImage.secure_url,
       deleted: false,
       created_at: new Date().toISOString(),
     });
 
-    // await NewHome.save();
+    await NewHome.save();
     res.status(201).json({
       status: "success",
       NewHome,
@@ -525,13 +542,27 @@ export const Add_to_Favourite = async (req, res) => {
 };
 
 export const UploadImage = async (req, res, next) => {
-    try {
-      const {home_image} = req.body;
-      // if(!home_image) throw new ErrorHandler(400, 'Image is required');
-      const imageDetails = await uploadToCloudinary(home_image);
-      console.log(imageDetails,'image details')
-      res.status(200).json({message: 'Upload successfully', homeImage: imageDetails.secure_url})
-    } catch (error) {
-      
+  try {
+    let homeImage = [];
+    const { home_image } = req.body;
+    if (home_image === "") throw new ErrorHandler(400, "Image is required");
+    if(home_image.length > 1){
+      let image = home_image.map(async (img) => {
+       let imageUrl = await uploadToCloudinary(img);
+       homeImage.push(imageUrl.secure_url)
+      })
+      await Promise.all(image)
+    }else{
+      let image = await uploadToCloudinary(home_image[0]);
+      homeImage = image.secure_url;
     }
-}
+    res
+      .status(200)
+      .json({
+        message: "Upload successfully",
+        homeImage: homeImage,
+      });
+  } catch (err) {
+    next(new ErrorHandler(err.statusCode || 500, err.message));
+  }
+};

@@ -1,8 +1,4 @@
-// define require
 import {ErrorHandler} from "../_helpers/errorHandler.js";
-// import { createRequire } from "module";
-// const require = createRequire(import.meta.url);
-
 import cloudinary from "cloudinary";
 
 cloudinary.config({
@@ -16,6 +12,7 @@ cloudinary.config({
     try{
         const {uploader} = cloudinary.v2;
         const res = await uploader.upload(fileString);
+        // console.log(res,'res')
         return res;
     }catch(err){
         throw new ErrorHandler(500, err)

@@ -12,16 +12,16 @@ const storage = multer.memoryStorage({
         cb(null, file.fieldname + "_" + Date.now()+'_' + file.originalname);
       },
     });
-// const fileFilter = (req, res, cb) => {
-  //   if(file.mimetype === "image/jpeg" || file.mimetype === "image/png"){
-    //       cb(null, true)
-    //   }else{
-      //       cb({message: 'Unsupported file format'}, false)
-      //   }
-      // }
+const fileFilter = (req, res, cb) => {
+    if(file.mimetype === "image/jpeg" || file.mimetype === "image/png"){
+          cb(null, true)
+      }else{
+            cb({message: 'Unsupported file format'}, false)
+        }
+      }
       const upload = multer({
         storage: storage, 
-        // fileFilter: fileFilter,
+        fileFilter: fileFilter,
         limits: {
           fileSize: 1024 * 1024 * 5,
         },

@@ -18,8 +18,8 @@ import { Role } from "../_helpers/role.js";
 const router = express.Router();
 
 // @desc        Create new home
-// @route       POST /home/create-home
-router.post("/create-home", auth, verifyRole(Role.User, Role.Admin), Create_Home);
+// @route       POST /home/create-home   auth, verifyRole(Role.User, Role.Admin),
+router.post("/create-home",  Create_Home);
 
 // @desc        Get all home
 // @route       POST /home/get-all-homes
@@ -47,7 +47,7 @@ router.post("/add-to-favourite/:id", auth, verifyRole(Role.User, Role.Admin), Ad
 
 // @desc        Upload image to cloudinary
 // @route       POST /home/upload-image
-router.post('/upload-image', upload.single('home_image') , UploadImage)
+router.post('/upload-image', upload.array('home_image') , UploadImage)
 
 export default router;
 
